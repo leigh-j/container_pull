@@ -1,0 +1,69 @@
+---
+
+- name: get them all
+  hosts: localhost
+  environment:
+#    http_proxy: http://proxy.example.com:8080
+#    https_proxy: http://proxy.example.com:8080
+  tasks:
+    - name: echo env vars
+      shell: echo $http_proxy
+
+    - name: grab the images
+      tags: podman
+      block:
+        - name: create mirror dir
+          file:
+            path: "{{ archive_root }}/images/"
+            state: absent
+
+        - name: create mirror dir
+          file:
+            path: "{{ archive_root }}/images/"
+            state: directory 
+
+        - name: pull all podaman
+          command: "podman pull {{ item }}"
+          with_items: 
+            - "{{ defined_images }}"
+            - "{{ template_images | default(omit) }}"
+
+        - name: archive with podman
+          command: "podman save --format oci-archive -o {{ archive_root }}/images/{{ item|replace(':','_')|replace('/','_') }}.tar {{ item }}"
+          with_items: 
+            - "{{ defined_images }}"
+            - "{{ template_images | default(omit) }}"
+
+    - name: grab the gits
+      tags: git
+      block:
+        - name: clear exisiting git mirrors
+          file:
+            path: "{{ archive_root }}/gitrepos/"
+            state: absent
+
+        - name: create mirror dir
+          file:
+            path: "{{ archive_root }}/gitrepos/"
+            state: directory 
+
+        - name: pull all github
+          shell: "git clone --mirror {{ item }}"
+          args:
+              chdir: "{{ archive_root }}/gitrepos/"
+          with_items: "{{ mirrored_git_repos }}"
+          
+    - name: create mirror dir
+      file:
+        path: "{{ archive_root }}/httpd/"
+        state: directory 
+
+    - name: archive it
+      shell: "tar -cJf archive.{{ansible_date_time.date}}.tar.xz ../gitrepos/ ../images/"
+      args:
+          chdir: "{{ archive_root }}/httpd"
+      tags:
+          - archive
+
+
+

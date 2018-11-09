@@ -1,0 +1,80 @@
+
+
+# grab all images that have the specified tag
+# query image metadata high side for specific version when retagging
+# Alternatively list only images required
+redhat_images:
+   - registry: registry.access.redhat.com
+     repo: openshift3
+     tag: "v3.9"
+   - registry: registry.access.redhat.com
+     tag: "latest"
+     repo: rhscl
+
+# the below was created by running the blind search.yml that uses the above vars then selectively removing images that wont be needed 
+# (for instance logging and metrics as we are usng the ose version of those ) from
+# docker images --format '- "{{.Repository}}:{{.Tag}}"' 
+# This also allows adding one off images that cant be determined from search like rhel base images or other custom requirements
+#
+# Another source of images
+defined_images:
+   - "registry.access.redhat.com/rhel7/rhel"
+   - "registry.access.redhat.com/rhel7/etcd"
+   - "registry.access.redhat.com/rhel7/openscap"
+   - "registry.access.redhat.com/openshift3/apb-base:v3.9"
+   - "registry.access.redhat.com/openshift3/container-engine:v3.9"
+   - "registry.access.redhat.com/openshift3/cri-o:v3.9"
+   - "registry.access.redhat.com/openshift3/image-inspector:v3.9"
+   - "registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.9"
+   - "registry.access.redhat.com/openshift3/jenkins-slave-base-rhel7:v3.9"
+   - "registry.access.redhat.com/openshift3/jenkins-slave-maven-rhel7:v3.9"
+   - "registry.access.redhat.com/openshift3/jenkins-slave-nodejs-rhel7:v3.9"
+   - "registry.access.redhat.com/openshift3/local-storage-provisioner:v3.9"
+   - "registry.access.redhat.com/openshift3/local-storage-provisioner:v3.8"
+   - "registry.access.redhat.com/openshift3/mariadb-apb:v3.9"
+   - "registry.access.redhat.com/openshift3/mongodb-24-rhel7:latest"
+   - "registry.access.redhat.com/openshift3/mysql-55-rhel7:latest"
+   - "registry.access.redhat.com/openshift3/mysql-apb:v3.9"
+   - "registry.access.redhat.com/openshift3/nodejs-010-rhel7:latest"
+   - "registry.access.redhat.com/openshift3/node:v3.8"
+   - "registry.access.redhat.com/openshift3/node:v3.9"
+   - "registry.access.redhat.com/openshift3/oauth-proxy:v3.9"
+   - "registry.access.redhat.com/openshift3/openvswitch:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-openvswitch:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-openvswitch:v3.8"
+   - "registry.access.redhat.com/openshift3/ose-ansible-service-broker:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-ansible:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-ansible:v3.8"
+   - "registry.access.redhat.com/openshift3/ose-cluster-capacity:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-deployer:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-deployer:v3.8"
+   - "registry.access.redhat.com/openshift3/ose-docker-builder:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-docker-registry:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-egress-http-proxy:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-egress-router:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-f5-router:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-federation:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-haproxy-router:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-keepalived-ipfailover:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-logging-auth-proxy:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-logging-curator:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-logging-elasticsearch:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-logging-fluentd:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-logging-kibana:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-metrics-cassandra:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-metrics-hawkular-metrics:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-metrics-heapster:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-pod:v3.8"
+   - "registry.access.redhat.com/openshift3/ose-pod:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-recycler:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-service-catalog:v3.9"
+   - "registry.access.redhat.com/openshift3/ose-sti-builder:v3.9"
+   - "registry.access.redhat.com/openshift3/ose:v3.8"
+   - "registry.access.redhat.com/openshift3/ose:v3.9"
+   - "registry.access.redhat.com/openshift3/postgresql-apb:v3.9"
+   - "registry.access.redhat.com/openshift3/prometheus-alert-buffer:v3.9"
+   - "registry.access.redhat.com/openshift3/prometheus-alertmanager:v3.9"
+   - "registry.access.redhat.com/openshift3/prometheus:v3.9"
+   - "registry.access.redhat.com/openshift3/registry-console:v3.9"
+   - "registry.access.redhat.com/openshift3/snapshot-controller:v3.9"
+   - "registry.access.redhat.com/openshift3/snapshot-provisioner:v3.9"
