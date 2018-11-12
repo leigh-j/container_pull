@@ -1,3 +1,6 @@
 [submodule "roles/openshift-images"]
 	path = roles/openshift-images
-	url = git@github.com:leigh-j/ansible-role-openshift-images.git
+	url = https://github.com/leigh-j/ansible-role-openshift-images.git
+[submodule "roles/container-archive"]
+	path = roles/container-archive
+	url = https://github.com/leigh-j/ansible-role-container-archive.git
