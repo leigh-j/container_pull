@@ -1,0 +1,16 @@
+---
+- name: tar it all
+  hosts: localhost
+  tasks:
+    - name: create mirror dir
+      file:
+        path: "{{ archive_root }}/httpd/"
+        state: directory
+      tags: tar
+    
+    - name: archive it
+      shell: "tar -cJf archive.{{ansible_date_time.date}}.tar.xz ../gitrepos/ ../images/"
+      args:
+          chdir: "{{ archive_root }}/httpd"
+      tags: tar
+    

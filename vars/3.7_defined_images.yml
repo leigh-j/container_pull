@@ -1,3 +1,18 @@
+image_repos:
+  openshift_ansible:
+    source: "https://github.com/openshift/openshift-ansible.git"
+    branch: "release-3.7"
+    files:
+      - 'roles/openshift_examples/files/examples/v3.7/image-streams/image-streams-rhel7.json'
+      - 'roles/openshift_examples/files/examples/v3.7/image-streams/dotnet_imagestreams.json'
+    paths:
+      - 'roles/openshift_examples/files/examples/v3.7/xpaas-streams/'
+      - 'roles/openshift_examples/files/examples/v3.7/xpaas-templates/'
+      - 'roles/openshift_examples/files/examples/v3.7/quickstart-templates/'
+      - 'roles/openshift_examples/files/examples/v3.7/db-templates/'
+
+
+
 defined_images:
    - "registry.access.redhat.com/rhel7/rhel"
    - "registry.access.redhat.com/rhel7/etcd"
@@ -20,7 +35,6 @@ defined_images:
    - "registry.access.redhat.com/openshift3/node:v3.7"
    - "registry.access.redhat.com/openshift3/oauth-proxy:v3.7"
    - "registry.access.redhat.com/openshift3/openvswitch:v3.7"
-   - "registry.access.redhat.com/openshift3/ose-openvswitch:v3.7"
    - "registry.access.redhat.com/openshift3/ose-ansible-service-broker:v3.7"
    - "registry.access.redhat.com/openshift3/ose-ansible:v3.7"
    - "registry.access.redhat.com/openshift3/ose-cluster-capacity:v3.7"

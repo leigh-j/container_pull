@@ -1,22 +1,18 @@
+image_repos:
+  openshift_ansible:
+    source: "https://github.com/openshift/openshift-ansible.git"
+    branch: "release-3.9"
+    files:
+      - 'roles/openshift_examples/files/examples/v3.9/image-streams/image-streams-rhel7.json'
+      - 'roles/openshift_examples/files/examples/v3.9/image-streams/dotnet_imagestreams.json'
+    paths:
+      - 'roles/openshift_examples/files/examples/v3.9/xpaas-streams/'
+      - 'roles/openshift_examples/files/examples/v3.9/xpaas-templates/'
+      - 'roles/openshift_examples/files/examples/v3.9/quickstart-templates/'
+      - 'roles/openshift_examples/files/examples/v3.9/db-templates/'
 
 
-# grab all images that have the specified tag
-# query image metadata high side for specific version when retagging
-# Alternatively list only images required
-redhat_images:
-   - registry: registry.access.redhat.com
-     repo: openshift3
-     tag: "v3.9"
-   - registry: registry.access.redhat.com
-     tag: "latest"
-     repo: rhscl
 
-# the below was created by running the blind search.yml that uses the above vars then selectively removing images that wont be needed 
-# (for instance logging and metrics as we are usng the ose version of those ) from
-# docker images --format '- "{{.Repository}}:{{.Tag}}"' 
-# This also allows adding one off images that cant be determined from search like rhel base images or other custom requirements
-#
-# Another source of images
 defined_images:
    - "registry.access.redhat.com/rhel7/rhel"
    - "registry.access.redhat.com/rhel7/etcd"
