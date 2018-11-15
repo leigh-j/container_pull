@@ -9,8 +9,15 @@
       tags: tar
     
     - name: archive it
-      shell: "tar -cJf archive.{{ansible_date_time.date}}.tar.xz ../gitrepos/ ../images/"
+      shell: "tar -cf archive.{{ansible_date_time.date}}.tar ../gitrepos/ ../images/"
       args:
           chdir: "{{ archive_root }}/httpd"
       tags: tar
+
+    - name: perms
+      file:
+        dest: "{{ archive_root }}/httpd/"
+        owner: 'root'
+        mode: 'u=rwX,g=rX,o=rX'
+        recurse: 'yes'
     
