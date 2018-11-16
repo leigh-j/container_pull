@@ -1,4 +1,7 @@
 
 - hosts: localhost
+  pre_tasks:
+    - name: load the vars
+      include_vars: 3.11_defined_images.yml
   roles: 
     - openshift-images

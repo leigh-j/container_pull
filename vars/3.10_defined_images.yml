@@ -1,0 +1,69 @@
+ocp_ver: '3.10'
+image_repos:
+  openshift_ansible:
+    source: "https://github.com/openshift/openshift-ansible.git"
+    branch: "release-{{ ocp_ver }}"
+    files:
+      - 'roles/openshift_examples/files/examples/v{{ ocp_ver }}/image-streams/image-streams-rhel7.json'
+      - 'roles/openshift_examples/files/examples/v{{ ocp_ver }}/image-streams/dotnet_imagestreams.json'
+    paths:
+      - 'roles/openshift_examples/files/examples/v{{ ocp_ver }}/xpaas-streams/'
+      - 'roles/openshift_examples/files/examples/v{{ ocp_ver }}/xpaas-templates/'
+      - 'roles/openshift_examples/files/examples/v{{ ocp_ver }}/quickstart-templates/'
+      - 'roles/openshift_examples/files/examples/v{{ ocp_ver }}/db-templates/'
+
+
+
+defined_images:
+   - "registry.access.redhat.com/rhel7/rhel"
+   - "registry.access.redhat.com/rhel7/etcd"
+   - "registry.access.redhat.com/rhel7/openscap"
+   - "registry.access.redhat.com/openshift3/apb-base:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/container-engine:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/cri-o:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/image-inspector:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/jenkins-2-rhel7:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/jenkins-slave-base-rhel7:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/jenkins-slave-maven-rhel7:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/jenkins-slave-nodejs-rhel7:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/local-storage-provisioner:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/mariadb-apb:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/mongodb-24-rhel7:latest"
+   - "registry.access.redhat.com/openshift3/mysql-apb:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/nodejs-010-rhel7:latest"
+   - "registry.access.redhat.com/openshift3/node:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/oauth-proxy:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/openvswitch:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-openvswitch:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-ansible-service-broker:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-ansible:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-cluster-capacity:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-deployer:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-docker-builder:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-docker-registry:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-egress-http-proxy:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-egress-router:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-f5-router:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-federation:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-haproxy-router:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-keepalived-ipfailover:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-logging-auth-proxy:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-logging-curator:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-logging-elasticsearch:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-logging-fluentd:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-logging-kibana:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-metrics-cassandra:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-metrics-hawkular-metrics:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-metrics-heapster:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-pod:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-recycler:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-service-catalog:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose-sti-builder:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/ose:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/postgresql-apb:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/prometheus-alert-buffer:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/prometheus-alertmanager:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/prometheus:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/registry-console:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/snapshot-controller:v{{ ocp_ver }}"
+   - "registry.access.redhat.com/openshift3/snapshot-provisioner:v{{ ocp_ver }}"
