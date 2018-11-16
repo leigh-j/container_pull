@@ -48,7 +48,7 @@
               chdir: "{{ archive_root }}/gitrepos/"
           loop: "{{ mirrored_git_repos | default([]) }}"
           
-    - name: create mirror dir
+    - name: tar them all
       include_tasks: archive.yml
       tags: tar
       when: run_archive == True
