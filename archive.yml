@@ -1,18 +1,35 @@
 ---
 - name: tar it all
   hosts: localhost
+  vars: 
+    archive_root: '/var/lib/import'
   tasks:
+    - name: clear work dir
+      file:
+        path: "{{ archive_root }}/tar_tmp"
+        state: absent
+      tags: tar
+      
+    - name: create work dir
+      file:
+        path: "{{ archive_root }}/tar_tmp"
+        state: directory
+      tags: tar
+
     - name: create mirror dir
       file:
-        path: "{{ archive_root }}/httpd/"
+      path: "{{ archive_root }}/httpd/"
         state: directory
       tags: tar
     
     - name: archive it
-      shell: "tar -cf archive.{{ansible_date_time.date}}.tar ../gitrepos/ ../images/"
+      shell: "tar -cJf archive.{{ansible_date_time.date}}.tar.xz ../gitrepos/ ../images/"
       args:
-          chdir: "{{ archive_root }}/httpd"
+        chdir: "{{ archive_root }}/tar_tmp"
       tags: tar
+
+   - name: copy to export
+     shell: "copy {{ archive_root }}/tar_tmp/* {{ archive_root }}/httpd/"
 
     - name: perms
       file:

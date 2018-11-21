@@ -6,9 +6,9 @@ image_repos:
       - 'roles/openshift_examples/files/examples/v3.9/image-streams/image-streams-rhel7.json'
       - 'roles/openshift_examples/files/examples/v3.9/image-streams/dotnet_imagestreams.json'
     paths:
-      - 'roles/openshift_examples/files/examples/v3.9/xpaas-streams/'
-      - 'roles/openshift_examples/files/examples/v3.9/xpaas-templates/'
-      - 'roles/openshift_examples/files/examples/v3.9/quickstart-templates/'
+   #   - 'roles/openshift_examples/files/examples/v3.9/xpaas-streams/'
+   #   - 'roles/openshift_examples/files/examples/v3.9/xpaas-templates/'
+   #   - 'roles/openshift_examples/files/examples/v3.9/quickstart-templates/'
       - 'roles/openshift_examples/files/examples/v3.9/db-templates/'
 
 
@@ -36,8 +36,7 @@ defined_images:
    - "registry.access.redhat.com/openshift3/node:v3.9"
    - "registry.access.redhat.com/openshift3/oauth-proxy:v3.9"
    - "registry.access.redhat.com/openshift3/openvswitch:v3.9"
-   - "registry.access.redhat.com/openshift3/ose-openvswitch:v3.9"
-   - "registry.access.redhat.com/openshift3/ose-openvswitch:v3.8"
+   - "registry.access.redhat.com/openshift3/openvswitch:v3.8"
    - "registry.access.redhat.com/openshift3/ose-ansible-service-broker:v3.9"
    - "registry.access.redhat.com/openshift3/ose-ansible:v3.9"
    - "registry.access.redhat.com/openshift3/ose-ansible:v3.8"

@@ -7,9 +7,9 @@ image_repos:
       - 'roles/openshift_examples/files/examples/latest/image-streams/image-streams-rhel7.json'
       - 'roles/openshift_examples/files/examples/latest/image-streams/dotnet_imagestreams.json'
     paths:
-      - 'roles/openshift_examples/files/examples/latest/xpaas-streams/'
-      - 'roles/openshift_examples/files/examples/latest/xpaas-templates/'
-      - 'roles/openshift_examples/files/examples/latest/quickstart-templates/'
+  #    - 'roles/openshift_examples/files/examples/latest/xpaas-streams/'
+  #    - 'roles/openshift_examples/files/examples/latest/xpaas-templates/'
+  #    - 'roles/openshift_examples/files/examples/latest/quickstart-templates/'
       - 'roles/openshift_examples/files/examples/latest/db-templates/'
 
 
