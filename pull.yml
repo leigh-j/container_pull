@@ -7,7 +7,7 @@
       include_vars:
         file: "{{ item }}"
       loop:
-        - 3.11_defined_images.yml
+        - rhpam.yml
   roles:
     - name: openshift-images
       tags: search

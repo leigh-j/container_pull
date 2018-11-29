@@ -18,7 +18,7 @@
 
     - name: create mirror dir
       file:
-      path: "{{ archive_root }}/httpd/"
+        path: "{{ archive_root }}/httpd/"
         state: directory
       tags: tar
     
@@ -28,8 +28,8 @@
         chdir: "{{ archive_root }}/tar_tmp"
       tags: tar
 
-   - name: copy to export
-     shell: "copy {{ archive_root }}/tar_tmp/* {{ archive_root }}/httpd/"
+    - name: copy to export
+      shell: "copy {{ archive_root }}/tar_tmp/* {{ archive_root }}/httpd/"
 
     - name: perms
       file:
