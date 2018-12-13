@@ -19,13 +19,19 @@
     archive_root: '/var/lib/import'
     run_archive: True
   pre_tasks:
+    - name: load the vars
+      include_vars: rhpam.yml
+      tags: always
     - name: what have we got
       debug:
         var: "{{ item }}"
+        verbosity: 1
       loop:
         - images_to_archive
         - repo_images
         - defined_images
+        - mirrored_git_repos
+      tags: always
   roles:
     - container-archive
   tasks:

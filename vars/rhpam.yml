@@ -6,4 +6,8 @@ image_repos:
       - 'rhpam71-image-streams.yaml'
     paths: []
 
+
+mirrored_git_repos:
+  - "https://github.com/jboss-container-images/rhpam-7-openshift-image.git"
+
 defined_images: []

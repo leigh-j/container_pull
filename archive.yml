@@ -23,13 +23,13 @@
       tags: tar
     
     - name: archive it
-      shell: "tar -cJf archive.{{ansible_date_time.date}}.tar.xz ../gitrepos/ ../images/"
+      shell: "tar -cf archive.{{ansible_date_time.date}}.tar ../gitrepos/ ../images/"
       args:
         chdir: "{{ archive_root }}/tar_tmp"
       tags: tar
 
     - name: copy to export
-      shell: "copy {{ archive_root }}/tar_tmp/* {{ archive_root }}/httpd/"
+      shell: "cp {{ archive_root }}/tar_tmp/* {{ archive_root }}/httpd/"
 
     - name: perms
       file:
