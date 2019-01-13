@@ -7,7 +7,8 @@
       include_vars:
         file: "{{ item }}"
       loop:
-        - rhpam.yml
+        - 3.10_defined_images.yml
+        - git_repos.yml
   roles:
     - name: openshift-images
       tags: search
@@ -20,7 +21,11 @@
     run_archive: True
   pre_tasks:
     - name: load the vars
-      include_vars: rhpam.yml
+      include_vars: 
+        file: "{{ item }}"
+      loop:
+        - 3.10_defined_images.yml
+        - git_repos.yml
       tags: always
     - name: what have we got
       debug:

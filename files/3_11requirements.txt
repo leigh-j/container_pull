@@ -1,0 +1,5 @@
+openshift
+openstacksdk
+ansible<2.7
+pip
+

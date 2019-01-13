@@ -11,3 +11,11 @@ mirrored_git_repos:
   - "https://github.com/jboss-container-images/rhpam-7-openshift-image.git"
 
 defined_images: []
+
+# need to add these, proxy needs updating
+#
+# https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
+# https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css
+# https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js
+# https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css
+# https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js
