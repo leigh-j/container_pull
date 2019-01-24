@@ -7,8 +7,7 @@
       include_vars:
         file: "{{ item }}"
       loop:
-        - 3.10_defined_images.yml
-        - git_repos.yml
+        - osp13.yml
   roles:
     - name: openshift-images
       tags: search
@@ -16,7 +15,7 @@
 - name: get them all
   hosts: localhost
   vars: 
-    images_to_archive: "{{ repo_images|union(defined_images) }}"
+    images_to_archive: "{{ repo_images|default([])|union(defined_images) }}"
     archive_root: '/var/lib/import'
     run_archive: True
   pre_tasks:
@@ -24,8 +23,7 @@
       include_vars: 
         file: "{{ item }}"
       loop:
-        - 3.10_defined_images.yml
-        - git_repos.yml
+        - osp13.yml
       tags: always
     - name: what have we got
       debug:
