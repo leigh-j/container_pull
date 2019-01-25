@@ -79,7 +79,7 @@ defined_images:
   - "registry.redhat.io/openshift3/ose-logging-eventrouter:v{{ocp_ver}}"
   - "registry.redhat.io/openshift3/ose-logging-fluentd:v{{ocp_ver}}"
   - "registry.redhat.io/openshift3/ose-logging-kibana5:v{{ocp_ver}}"
-  - "registry.redhat.io/openshift3/ose-metrics-schema-installer:v{{ocp_ver}}"
+  - "registry.redhat.io/openshift3/metrics-schema-installer:v{{ocp_ver}}"
   - "registry.redhat.io/openshift3/prometheus:v{{ocp_ver}}"
   - "registry.redhat.io/openshift3/prometheus-alert-buffer:v{{ocp_ver}}"
   - "registry.redhat.io/openshift3/prometheus-alertmanager:v{{ocp_ver}}"
