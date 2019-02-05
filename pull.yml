@@ -7,7 +7,8 @@
       include_vars:
         file: "{{ item }}"
       loop:
-        - osp13.yml
+        - 3.10_defined_images.yml
+        - git_repos.yml
   roles:
     - name: openshift-images
       tags: search
@@ -23,7 +24,8 @@
       include_vars: 
         file: "{{ item }}"
       loop:
-        - osp13.yml
+        - 3.10_defined_images.yml
+        - git_repos.yml
       tags: always
     - name: what have we got
       debug:

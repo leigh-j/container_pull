@@ -1,12 +1,10 @@
 openshift
-openstacksdk
-ansible
 pip
 twine
 python-openstackclient
 python-neutronclient
 openstacksdk==0.15
-ansible==2.6.4
+ansible<2.7
 stevedore==1.27
 requests==2.18.0
 keystoneauth1==3.9.0

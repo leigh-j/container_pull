@@ -16,6 +16,7 @@ mirrored_git_repos:
   - "https://github.com/openshift/grafana.git"
   - "https://github.com/openshift/prometheus-operator.git"
   - "https://github.com/openshift/prometheus-alertmanager.git"
+  - "https://github.com/ThomasBuchinger/miq-flow.git"
  # - "https://github.com/openshift/ruby-ex.git"
  # - "https://github.com/openshift/nodejs-ex.git"
  # - "https://github.com/openshift/dancer-ex.git"
