@@ -4,13 +4,13 @@ image_repos:
     source: "https://github.com/openshift/openshift-ansible.git"
     branch: "release-{{ ocp_ver }}"
     files:
-      - 'roles/openshift_examples/files/examples/latest/image-streams/image-streams-rhel7.json'
-      - 'roles/openshift_examples/files/examples/latest/image-streams/dotnet_imagestreams.json'
+      - 'roles/openshift_examples/files/examples/x86_64/image-streams/image-streams-rhel7.json'
+      #- 'roles/openshift_examples/files/examples/x86_64/image-streams/dotnet_imagestreams.json'
     paths:
-  #    - 'roles/openshift_examples/files/examples/latest/xpaas-streams/'
-  #    - 'roles/openshift_examples/files/examples/latest/xpaas-templates/'
-  #    - 'roles/openshift_examples/files/examples/latest/quickstart-templates/'
-      - 'roles/openshift_examples/files/examples/latest/db-templates/'
+      #- 'roles/openshift_examples/files/examples/x86_64/xpaas-streams/'
+      #- 'roles/openshift_examples/files/examples/x86_64/xpaas-templates/'
+      - 'roles/openshift_examples/files/examples/x86_64/quickstart-templates/'
+      - 'roles/openshift_examples/files/examples/x86_64/db-templates/'
 
 
 # this list derived from https://docs.openshift.com/container-platform/3.11/install/disconnected_install.html#disconnected-syncing-images

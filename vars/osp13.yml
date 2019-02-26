@@ -45,3 +45,4 @@ defined_images:
   - "registry.access.redhat.com/rhosp13/openstack-swift-container:13.0{{ tag_version }}"
   - "registry.access.redhat.com/rhosp13/openstack-swift-object:13.0{{ tag_version }}"
   - "registry.access.redhat.com/rhosp13/openstack-swift-proxy-server:13.0{{ tag_version }}"
+  - "docker.io/skydive/skydive:latest"

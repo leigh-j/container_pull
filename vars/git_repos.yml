@@ -7,6 +7,8 @@ mirrored_git_repos:
   - "https://github.com/openshift/openshift-ansible.git"
   - "https://github.com/openshift-s2i/s2i-asciibinder.git"
   - "https://github.com/openshift/source-to-image.git"
+  - "https://github.com/openshift/jenkins-client-plugin.git"
+  - "https://github.com/jenkinsci/openshift-client-plugin.git"
   - "https://github.com/leigh-j/container_pull.git"
   - "https://github.com/rhtconsulting/cfme-rhconsulting-scripts.git"
   - "https://github.com/adamgoossens/manageiq-logstash-grok"
