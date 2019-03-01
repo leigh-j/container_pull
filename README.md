@@ -7,7 +7,7 @@ This play pulls in all the images required for running openshift in disconnected
 Requirements
 ===========
 
-It requires ansible 2.7 and podman, with any environment variables for outbound proxy already set. 
+It requires ansible 2.7 and docker, with any environment variables for outbound proxy already set. 
 
 Container storage should also be configured to handle the volume, 100G would be sufficient.
 
