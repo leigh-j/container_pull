@@ -3,10 +3,12 @@ pip
 twine
 python-openstackclient
 python-neutronclient
-openstacksdk==0.15
+openstacksdk
 ansible<2.7
-stevedore==1.27
-requests==2.18.0
-keystoneauth1==3.9.0
-ipaddress==1.0.17
+stevedore
+requests
+keystoneauth1
+ipaddress
 notario
+wrapt
+jinja2
