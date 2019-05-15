@@ -88,5 +88,8 @@ defined_images:
   - "registry.redhat.io/rhgs3/rhgs-volmanager-rhel7:v{{ocp_ver}}"
   - "registry.redhat.io/rhgs3/rhgs-gluster-block-prov-rhel7:v{{ocp_ver}}"
   - "registry.redhat.io/rhgs3/rhgs-s3-server-rhel7:v{{ocp_ver}}"
+  - "registry.redhat.io/rhscl/s2i-base-rhel7:latest"
+  - "registry.redhat.io/rhscl/s2i-core-rhel7:latest"
+  - "registry.redhat.io/redhat-sso-7/sso73-openshift"
   - "registry.access.redhat.com/rhceph/rhceph-3-rhel7:3"
   - "registry.access.redhat.com/rhceph/rhceph-3-dashboard-rhel7:3"

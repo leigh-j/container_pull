@@ -7,7 +7,7 @@ openstacksdk
 ansible<2.7
 stevedore
 requests
-keystoneauth1
+keystoneauth
 ipaddress
 notario
 wrapt

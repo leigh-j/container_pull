@@ -29,7 +29,7 @@
       tags: tar
 
     - name: copy to export
-      shell: "cp {{ archive_root }}/tar_tmp/* {{ archive_root }}/httpd/"
+      shell: "mv {{ archive_root }}/tar_tmp/* {{ archive_root }}/httpd/"
 
     - name: perms
       file:
