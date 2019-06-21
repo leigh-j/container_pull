@@ -6,11 +6,11 @@ image_repos:
     files:
       - 'roles/openshift_examples/files/examples/x86_64/image-streams/image-streams-rhel7.json'
       #- 'roles/openshift_examples/files/examples/x86_64/image-streams/dotnet_imagestreams.json'
-    paths:
+    paths: []
       #- 'roles/openshift_examples/files/examples/x86_64/xpaas-streams/'
       #- 'roles/openshift_examples/files/examples/x86_64/xpaas-templates/'
-      - 'roles/openshift_examples/files/examples/x86_64/quickstart-templates/'
-      - 'roles/openshift_examples/files/examples/x86_64/db-templates/'
+      #- 'roles/openshift_examples/files/examples/x86_64/quickstart-templates/'
+      #- 'roles/openshift_examples/files/examples/x86_64/db-templates/'
 
 
 # this list derived from https://docs.openshift.com/container-platform/3.11/install/disconnected_install.html#disconnected-syncing-images
@@ -66,9 +66,27 @@ defined_images:
   - "registry.redhat.io/openshift3/registry-console:v{{ocp_ver}}"
   - "registry.redhat.io/openshift3/snapshot-controller:v{{ocp_ver}}"
   - "registry.redhat.io/openshift3/snapshot-provisioner:v{{ocp_ver}}"
+  - "registry.redhat.io/openshift3/jenkins-2-rhel7:v{{ocp_ver}}"
+  - "registry.redhat.io/openshift3/jenkins-slave-base-rhel7:v{{ocp_ver}}"
+  - "registry.redhat.io/openshift3/jenkins-agent-maven-35-rhel7:v{{ocp_ver}}"
+  - "registry.redhat.io/openshift3/jenkins-agent-nodejs-8-rhel7:v{{ocp_ver}}"
   - "registry.redhat.io/rhel7/rhel-atomic:latest"
   - "registry.redhat.io/rhel7/rhel:latest"
   - "registry.redhat.io/rhel7/etcd:3.2.22"
+  - "registry.redhat.io/ubi8/ubi"
+  - "registry.redhat.io/ubi8/ubi-init"
+  - "registry.redhat.io/ubi8/ubi-minimal"
+  - "registry.redhat.io/ubi8/s2i-core"
+  - "registry.redhat.io/ubi8/python-27"
+  - "registry.redhat.io/ubi8/python-36"
+  - "registry.redhat.io/ubi8/ruby-25"
+  - "registry.redhat.io/ubi7/ubi"
+  - "registry.redhat.io/ubi7/ubi-init"
+  - "registry.redhat.io/ubi7/ubi-minimal"
+  - "registry.redhat.io/ubi7/s2i-core"
+  - "registry.redhat.io/ubi7/python-27"
+  - "registry.redhat.io/ubi7/python-36"
+  - "registry.redhat.io/ubi7/ruby-25"
   - "registry.redhat.io/openshift3/metrics-cassandra:v{{ocp_ver}}"
   - "registry.redhat.io/openshift3/metrics-hawkular-metrics:v{{ocp_ver}}"
   - "registry.redhat.io/openshift3/metrics-hawkular-openshift-agent:v{{ocp_ver}}"
@@ -90,6 +108,12 @@ defined_images:
   - "registry.redhat.io/rhgs3/rhgs-s3-server-rhel7:v{{ocp_ver}}"
   - "registry.redhat.io/rhscl/s2i-base-rhel7:latest"
   - "registry.redhat.io/rhscl/s2i-core-rhel7:latest"
-  - "registry.redhat.io/redhat-sso-7/sso73-openshift"
+  - "registry.redhat.io/redhat-sso-7/sso73-openshift:latest"
+  - "registry.redhat.io/openjdk/openjdk-11-rhel7:latest"
+  - "registry.redhat.io/openjdk/openjdk-11-rhel8:latest"
+  - "registry.redhat.io/openjdk/openjdk-8-rhel8:latest"
   - "registry.access.redhat.com/rhceph/rhceph-3-rhel7:3"
   - "registry.access.redhat.com/rhceph/rhceph-3-dashboard-rhel7:3"
+  - "docker.io/apache/nifi:latest"
+  - "docker.io/bitnami/elasticsearch:7"
+  - "docker.io/bitnami/rabbitmq:3.7
