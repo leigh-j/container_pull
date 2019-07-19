@@ -1,0 +1,25 @@
+image_repos:
+  kubeflow:
+    source: "https://github.com/kubeflow/kubeflow.git"
+    branch: "7.1.x"
+    files:
+      - 'deploy/operator.yaml'
+    paths: []
+  jaegertracing:
+    source: "https://github.com/jaegertracing/jaeger-operator.git"
+    branch: "v1.13.1"
+    files: 
+      - 'deploy/operator.yaml'
+    paths: []
+
+
+
+mirrored_git_repos:
+  - "https://github.com/kubernetes-sigs/kustomize.git"
+  - "https://github.com/kubeflow/manifests.git"
+  - "https://github.com/kubeflow/kubeflow.git"
+  - "https://github.com/jaegertracing/jaeger-operator.git"
+  - "https://github.com/Maistra/istio-operator.git"
+
+defined_images: []
+

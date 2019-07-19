@@ -1,0 +1,61 @@
+---
+
+- name: find them all
+  hosts: localhost
+  pre_tasks:
+    - name: load the vars
+      include_vars:
+        file: "{{ item }}"
+      loop:
+        - 'kubeflow.yml'
+  roles:
+    - name: openshift-images
+      tags: search
+
+- name: get them all
+  hosts: localhost
+  vars: 
+    images_to_archive: "{{ repo_images|default([])|union(defined_images) }}"
+    archive_root: '/var/lib/import'
+    run_archive: True
+  pre_tasks:
+    - name: load the vars
+      include_vars: 
+        file: "{{ item }}"
+      loop:
+        - 'kubeflow.yml'
+      tags: always
+
+    - name: what have we got
+      debug:
+        var: "{{ item }}"
+        verbosity: 1
+      loop:
+        - images_to_archive
+        - repo_images
+        - defined_images
+        - mirrored_git_repos
+      tags: always
+  roles:
+    - container-archive
+  tasks:
+    - name: grab the gits
+      tags: git
+      block:
+        - name: clear exisiting git mirrors
+          file:
+            path: "{{ archive_root }}/gitrepos/"
+            state: absent
+
+        - name: create mirror dir
+          file:
+            path: "{{ archive_root }}/gitrepos/"
+            state: directory 
+
+        - name: pull all github
+          shell: "git clone --mirror {{ item }}"
+          args:
+              chdir: "{{ archive_root }}/gitrepos/"
+          loop: "{{ mirrored_git_repos | default([]) }}"
+          
+
