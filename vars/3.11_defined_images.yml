@@ -115,5 +115,7 @@ defined_images:
   - "registry.access.redhat.com/rhceph/rhceph-3-rhel7:3"
   - "registry.access.redhat.com/rhceph/rhceph-3-dashboard-rhel7:3"
   - "docker.io/apache/nifi:latest"
+  - "docker.io/ansible/awx_web:latest"
+  - "docker.io/ansible/awx_task:latest"
   - "docker.io/bitnami/elasticsearch:7"
-  - "docker.io/bitnami/rabbitmq:3.7
+  - "docker.io/bitnami/rabbitmq:3.7"

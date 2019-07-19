@@ -18,8 +18,10 @@ mirrored_git_repos:
   - "https://github.com/openshift/prometheus-operator.git"
   - "https://github.com/openshift/prometheus-alertmanager.git"
   - "https://github.com/intel-cloud/cosbench.git"
+  - "https://github.com/ansible/awx.git"
   - "https://github.com/openstack/heat.git"
   - "https://github.com/apache/nifi.git"
+  - "https://github.com/ivanilves/lstags.git"
   # vscode plugins
   # - "https://github.com/mdickin/vscode-markdown-shortcuts.git"
   # - "https://github.com/DavidAnson/vscode-markdownlint.git"
