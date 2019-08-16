@@ -4,7 +4,7 @@ twine
 python-openstackclient
 python-neutronclient
 openstacksdk
-ansible<2.7
+ansible
 stevedore
 requests
 keystoneauth

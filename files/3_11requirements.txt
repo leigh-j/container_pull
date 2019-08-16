@@ -1,6 +1,6 @@
 openshift
 openstacksdk
-ansible<2.8
+ansible
 pip
 sphinx
 six
