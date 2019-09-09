@@ -1,16 +1,16 @@
 ocp_ver: '3.11'
 image_repos:
-  openshift_ansible:
+  - name: 'openshift_ansible'
     source: "https://github.com/openshift/openshift-ansible.git"
     branch: "release-{{ ocp_ver }}"
     files:
       - 'roles/openshift_examples/files/examples/x86_64/image-streams/image-streams-rhel7.json'
-      #- 'roles/openshift_examples/files/examples/x86_64/image-streams/dotnet_imagestreams.json'
-    paths: []
+    paths:
+      - 'roles/openshift_examples/files/examples/x86_64/quickstart-templates/'
+      #- 'roles/openshift_examples/files/examples/x86_64/db-templates/'
       #- 'roles/openshift_examples/files/examples/x86_64/xpaas-streams/'
       #- 'roles/openshift_examples/files/examples/x86_64/xpaas-templates/'
-      #- 'roles/openshift_examples/files/examples/x86_64/quickstart-templates/'
-      #- 'roles/openshift_examples/files/examples/x86_64/db-templates/'
+      #- 'roles/openshift_examples/files/examples/x86_64/image-streams/dotnet_imagestreams.json'
 
 
 # this list derived from https://docs.openshift.com/container-platform/3.11/install/disconnected_install.html#disconnected-syncing-images
@@ -24,10 +24,6 @@ defined_images:
   - "registry.redhat.io/openshift3/csi-provisioner:v{{ocp_ver}}"
   - "registry.redhat.io/openshift3/grafana:v{{ocp_ver}}"
   - "registry.redhat.io/openshift3/image-inspector:v{{ocp_ver}}"
-  - "registry.redhat.io/openshift3/mariadb-apb:v{{ocp_ver}}"
-  - "registry.redhat.io/openshift3/mediawiki:v{{ocp_ver}}"
-  - "registry.redhat.io/openshift3/mediawiki-apb:v{{ocp_ver}}"
-  - "registry.redhat.io/openshift3/mysql-apb:v{{ocp_ver}}"
   - "registry.redhat.io/openshift3/ose-ansible:v{{ocp_ver}}"
   - "registry.redhat.io/openshift3/ose-ansible-service-broker:v{{ocp_ver}}"
   - "registry.redhat.io/openshift3/ose-cli:v{{ocp_ver}}"
@@ -108,12 +104,12 @@ defined_images:
   - "registry.redhat.io/rhgs3/rhgs-s3-server-rhel7:v{{ocp_ver}}"
   - "registry.redhat.io/rhscl/s2i-base-rhel7:latest"
   - "registry.redhat.io/rhscl/s2i-core-rhel7:latest"
-  - "registry.redhat.io/redhat-sso-7/sso73-openshift:latest"
   - "registry.redhat.io/openjdk/openjdk-11-rhel7:latest"
   - "registry.redhat.io/openjdk/openjdk-11-rhel8:latest"
   - "registry.redhat.io/openjdk/openjdk-8-rhel8:latest"
   - "registry.access.redhat.com/rhceph/rhceph-3-rhel7:3"
   - "registry.access.redhat.com/rhceph/rhceph-3-dashboard-rhel7:3"
+  - "quay.io/redhat/quay:v3.1.0"
   - "docker.io/apache/nifi:latest"
   - "docker.io/ansible/awx_web:latest"
   - "docker.io/ansible/awx_task:latest"

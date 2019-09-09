@@ -1,5 +1,5 @@
 image_repos:
-  rhpam7:
+  - name: rhpam7
     source: "https://github.com/jboss-container-images/rhpam-7-openshift-image.git"
     branch: "7.1.x"
     files:
