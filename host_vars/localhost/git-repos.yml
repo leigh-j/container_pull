@@ -12,20 +12,31 @@ git_repos:
     - https://github.com/openshift/dancer-ex.git
     - https://github.com/openshift/httpd-ex.git
     - https://github.com/openshift/rails-ex.git
-    - https://github.com/redhat-cop/quay-operator.git
 
   development:
     - https://github.com/jboss-developer/jboss-eap-quickstarts.git
     - https://github.com/jboss-fuse/spring-boot-camel-xa.git
     - https://github.com/jboss-fuse/wildfly-camel-examples.git
     - https://github.com/jboss-openshift/openshift-quickstarts.git
-    - https://github.com/redhat-developer/redhat-sso-quickstarts
+    - https://github.com/redhat-developer/redhat-sso-quickstarts.git
     - https://github.com/redhat-developer/s2i-aspnet-musicstore-ex.git
     - https://github.com/redhat-developer/s2i-dotnetcore-ex.git
     - https://github.com/sclorg/cakephp-ex.git
     - https://github.com/sclorg/django-ex.git
     - https://github.com/sclorg/nginx-ex.git
     - https://github.com/sclorg/nodejs-ex.git
+
+  redhat_cop:
+    - https://github.com/redhat-cop/quay-operator.git
+    - https://github.com/redhat-cop/openshift-toolkit
+    - https://github.com/redhat-cop/openshift-applier.git
+    - https://github.com/redhat-cop/openshift-templates.git
+    - https://github.com/redhat-cop/containers-quickstarts.git
+    - https://github.com/redhat-cop/container-pipelines.git
+    - https://github.com/redhat-cop/pipeline-library.git
+    - https://github.com/redhat-cop/namespace-configuration-operator.git
+    - https://github.com/redhat-cop/spring-rest
+    - https://github.com/redhat-cop/openshift-management
 
   openstack:
     - https://github.com/openstack/heat.git
@@ -49,12 +60,15 @@ git_repos:
 
   ansible:
     - https://github.com/ansible/awx.git
+    - https://github.com/stocky37/ansible-role-git-mirror.git
 
   misc:
-    - https://github.com/ivanilves/lstags.git
-    - https://github.com/adamgoossens/manageiq-logstash-grok
+    - https://github.com/adamgoossens/manageiq-logstash-grok.git
+    - https://github.com/leigh-j/container_pull.git
+    - https://github.com/stocky37/dotfiles.git
     - https://github.com/apache/nifi.git
     - https://github.com/intel-cloud/cosbench.git
-
-  personal:
-    - https://github.com/leigh-j/container_pull.git
+    - https://github.com/ivanilves/lstags.git
+    - https://github.com/zsh-users/zsh-autosuggestions.git
+    - https://github.com/thoughtbot/dotfiles.git
+    - https://github.com/thoughtbot/rcm.git
