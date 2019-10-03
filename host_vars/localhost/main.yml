@@ -1,0 +1,8 @@
+archive_dir: /var/lib/import
+export_dir: "{{ archive_dir }}/httpd"
+
+git_mirror_dir: "{{ archive_dir }}/git-repos"
+git_export_archive: "{{ export_dir }}/git-repos.tar.gz"
+
+
+

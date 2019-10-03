@@ -1,0 +1,60 @@
+---
+git_repos:
+  openshift:
+    - https://github.com/openshift/openshift-ansible.git
+    - https://github.com/openshift/source-to-image.git
+    - https://github.com/openshift-s2i/s2i-asciibinder.git
+    - https://github.com/openshift/jenkins-client-plugin.git
+    - https://github.com/openshift/cluster-samples-operator.git
+    - https://github.com/openshift/grafana.git
+    - https://github.com/openshift/prometheus-operator.git
+    - https://github.com/openshift/prometheus-alertmanager.git
+    - https://github.com/openshift/dancer-ex.git
+    - https://github.com/openshift/httpd-ex.git
+    - https://github.com/openshift/rails-ex.git
+    - https://github.com/redhat-cop/quay-operator.git
+
+  development:
+    - https://github.com/jboss-developer/jboss-eap-quickstarts.git
+    - https://github.com/jboss-fuse/spring-boot-camel-xa.git
+    - https://github.com/jboss-fuse/wildfly-camel-examples.git
+    - https://github.com/jboss-openshift/openshift-quickstarts.git
+    - https://github.com/redhat-developer/redhat-sso-quickstarts
+    - https://github.com/redhat-developer/s2i-aspnet-musicstore-ex.git
+    - https://github.com/redhat-developer/s2i-dotnetcore-ex.git
+    - https://github.com/sclorg/cakephp-ex.git
+    - https://github.com/sclorg/django-ex.git
+    - https://github.com/sclorg/nginx-ex.git
+    - https://github.com/sclorg/nodejs-ex.git
+
+  openstack:
+    - https://github.com/openstack/heat.git
+
+  cfme:
+    - https://github.com/rhtconsulting/cfme-rhconsulting-scripts.git
+
+  ceph:
+    - https://github.com/ceph/ceph-nagios-plugins.git
+    - https://github.com/ceph/ceph-ansible.git
+
+  kubeflow:
+    - https://github.com/kubernetes-sigs/kustomize.git
+    - https://github.com/kubeflow/manifests.git
+    - https://github.com/kubeflow/kubeflow.git
+    - https://github.com/jaegertracing/jaeger-operator.git
+    - https://github.com/Maistra/istio-operator.git
+
+  rhpam:
+    - https://github.com/jboss-container-images/rhpam-7-openshift-image.git
+
+  ansible:
+    - https://github.com/ansible/awx.git
+
+  misc:
+    - https://github.com/ivanilves/lstags.git
+    - https://github.com/adamgoossens/manageiq-logstash-grok
+    - https://github.com/apache/nifi.git
+    - https://github.com/intel-cloud/cosbench.git
+
+  personal:
+    - https://github.com/leigh-j/container_pull.git
