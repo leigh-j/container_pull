@@ -1,8 +1,7 @@
-image_repos: {}
+image_repos: []
 # tag_version not required unless you want exactly a specific tag"
 tag_version: ""
 defined_images:
-  - "docker.io/skydive/skydive:latest"
   - "registry.redhat.io/rhosp13/openstack-aodh-api:13.0{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-aodh-evaluator:13.0{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-aodh-listener:13.0{{ tag_version }}"
@@ -30,6 +29,7 @@ defined_images:
   - "registry.redhat.io/rhosp13/openstack-neutron-dhcp-agent:13.0{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-neutron-l3-agent:13.0{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-neutron-metadata-agent:13.0{{ tag_version }}"
+  - "registry.redhat.io/rhosp13/openstack-neutron-metadata-agent-ovn:13.0{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-neutron-openvswitch-agent:13.0{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-neutron-server:13.0{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-neutron-server-ovn:13.0{{ tag_version }}"
