@@ -10,8 +10,10 @@
 
     - include_role:
         name: git-mirror
+      vars:
+        git_mirror_action: 'download'
 
     - name: Archive the git repositories
       archive:
-        path: "{{ git_mirror_dir }}/*.git"
+        path: "{{ git_mirror_workdir }}/*.git"
         dest: "{{ git_export_archive }}"
