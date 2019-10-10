@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tags: ocp
+  tasks:
+    - include_tasks: tasks/pull-images.yml
+      vars:
+        image_repos: "{{ ocp_image_repos | default([]) }}"
+        defined_images: "{{ ocp_images | default([]) }}"
+

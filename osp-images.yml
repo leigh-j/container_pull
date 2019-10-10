@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tags: osp
+  tasks:
+    - include_tasks: tasks/pull-images.yml
+      vars:
+        image_repos: "{{ osp_image_repos | default([]) }}"
+        defined_images: "{{ osp_images | default([]) }}"
+

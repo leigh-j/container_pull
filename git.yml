@@ -1,5 +1,7 @@
 ---
 - hosts: localhost
+  gather_facts: no
+  tags: git
   vars:
     git_mirrors: []
   tasks:

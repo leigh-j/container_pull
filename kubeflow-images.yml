@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tags: kubeflow
+  tasks:
+    - include_tasks: tasks/pull-images.yml
+      vars:
+        image_repos: "{{ kubeflow_image_repos | default([]) }}"
+        defined_images: "{{ kubeflow_images | default([]) }}"
+

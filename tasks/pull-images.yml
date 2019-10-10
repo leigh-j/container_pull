@@ -1,0 +1,25 @@
+---
+- name: Extract images from git repositories
+  include_role:
+    name: openshift-images
+  tags: search
+
+
+- name: Display vars
+  debug:
+    var: "{{ item }}"
+    verbosity: 1
+  loop:
+    - images_to_archive
+    - repo_images
+    - defined_images
+    - mirrored_git_repos
+  tags: always
+
+
+- name: Download & archive the images
+  include_role:
+    name: container-archive
+  vars:
+    images_to_archive: "{{ repo_images | union(defined_images) }}"
+
