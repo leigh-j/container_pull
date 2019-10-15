@@ -4,3 +4,6 @@
 [submodule "roles/container-archive"]
 	path = roles/container-archive
 	url = https://github.com/leigh-j/ansible-role-container-archive.git
+[submodule "roles/git-mirror"]
+	path = roles/git-mirror
+	url = https://github.com/stocky37/ansible-role-git-mirror.git

@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tags: rhpam
+  tasks:
+    - include_tasks: tasks/pull-images.yml
+      vars:
+        image_repos: "{{ rhpam_image_repos | default([]) }}"
+        defined_images: "{{ rhpam_images | default([]) }}"
+
