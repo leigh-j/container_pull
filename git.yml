@@ -12,8 +12,6 @@
 
     - include_role:
         name: git-mirror
-      vars:
-        git_mirror_action: 'download'
 
     - name: Archive the git repositories
       archive:

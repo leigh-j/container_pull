@@ -1,6 +1,7 @@
 archive_root: /var/lib/import
 export_dir: "{{ archive_root }}/httpd"
 
+git_mirror_action: download
 git_mirror_workdir: "{{ archive_root }}/git-repos"
 git_export_archive: "{{ export_dir }}/git-repos.tar.gz"
 
