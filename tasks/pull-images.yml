@@ -21,5 +21,5 @@
   include_role:
     name: container-archive
   vars:
-    images_to_archive: "{{ repo_images | union(defined_images) }}"
+    images_to_archive: "{{ repo_images | default([]) | union(defined_images) }}"
 

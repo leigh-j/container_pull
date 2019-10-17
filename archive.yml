@@ -23,7 +23,7 @@
       tags: tar
     
     - name: archive it
-      shell: "tar -cf images-{{ansible_date_time.date}}.tar ../gitrepos/ ../images/ ../pip/"
+      shell: "tar -cf images-{{ansible_date_time.date}}.tar ../gitrepos/ ../images/ ../pip/ ../assets-openshift"
       args:
         chdir: "{{ archive_root }}/tar_tmp"
       tags: tar
