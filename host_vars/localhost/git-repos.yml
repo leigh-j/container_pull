@@ -1,5 +1,9 @@
 ---
 git_repos:
+  operators:
+    - https://github.com/coreos/prometheus-operator.git
+    - https://github.com/integr8ly/grafana-operator.git
+    - https://github.com/DirectXMan12/k8s-prometheus-adapter.git
   openshift:
     - https://github.com/openshift/openshift-ansible.git
     - https://github.com/openshift/source-to-image.git
