@@ -1,0 +1,18 @@
+op_image_repos:
+  - name: 'prometheus'
+    source: "https://github.com/coreos/prometheus-operator.git"
+    branch: "release-0.33"
+    files:
+      - 'bundle.yaml'
+    paths: []
+
+op_gitrepos:
+
+# this list derived from content of above repos
+op_images:
+  - "quay.io/redhat-cop/namespace-configuration-operator"
+# prometheus
+  - "quay.io/coreos/prometheus-config-reloader:v0.33.0"
+  - "quay.io/coreos/configmap-reload:v0.0.1"
+  - "quay.io/prometheus/busybox:latest"
+  - "quay.io/thanos/thanos:v0.7.0"
