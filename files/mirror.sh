@@ -6,7 +6,7 @@ pip download -d /var/lib/import/pip/ -r ./files/dev_requirements.txt --no-cache-
 
 #ruby gems
 scl enable rh-ruby24 bash
-bunlde install --path /var/lib/import/gems/ --force --gemfile ./Gemfile
+bundle install --path /var/lib/import/gems/ --force --gemfile ./Gemfile
 # this will download the gems and all dependencies to 
 # /var/lib/import/gems/ruby/2.4.0/cache/
 
