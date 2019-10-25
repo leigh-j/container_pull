@@ -1,18 +1,30 @@
-op_image_repos:
-  - name: 'prometheus'
-    source: "https://github.com/coreos/prometheus-operator.git"
-    branch: "release-0.33"
-    files:
-      - 'bundle.yaml'
-    paths: []
+op_image_repos: [] # this isn't useful for operators at the moment, maybe in the future.
+#  - name: 'prometheus'
+#    source: "https://github.com/coreos/prometheus-operator.git"
+#    branch: "release-0.33"
+#    files:
+#      - 'bundle.yaml'
+#    paths: []
 
 op_gitrepos:
+  - 'https://github.com/cloud-bulldozer/ripsaw.git'
+  - 'https://github.com/coreos/prometheus-operator.git'
+  - 'https://github.com/integr8ly/grafana-operator.git'
+  - 'https://github.com/DirectXMan12/k8s-prometheus-adapter.git'
+  - 'https://github.com/integr8ly/grafana-operator.git'
+  - 'https://github.com/bitnami/bitnami-docker-grafana.git'
+  - 'https://github.com/strimzi/strimzi-kafka-operator.git'
+
 
 # this list derived from content of above repos
 op_images:
   - "quay.io/redhat-cop/namespace-configuration-operator"
 # prometheus
   - "quay.io/coreos/prometheus-config-reloader:v0.33.0"
+  - "quay.io/coreos/prometheus-operator:v0.33.0"
   - "quay.io/coreos/configmap-reload:v0.0.1"
   - "quay.io/prometheus/busybox:latest"
   - "quay.io/thanos/thanos:v0.7.0"
+  - "quay.io/integreatly/grafana-operator:latest"
+  - "quay.io/openshift/origin-grafana:4.3"
+  - "quay.io/bitnami/grafana:6"

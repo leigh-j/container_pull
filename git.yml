@@ -2,13 +2,11 @@
 - hosts: localhost
   gather_facts: no
   tags: git
-  vars:
-    git_mirrors: []
   tasks:
     - name: Flatten & append repos lists
       loop: "{{ git_repos | list }}"
       set_fact:
-        git_mirrors: "{{ git_mirrors + git_repos[item] }}"
+        git_mirrors: "{{ (git_mirrors | default([])) + git_repos[item] }}"
 
     - include_role:
         name: git-mirror
