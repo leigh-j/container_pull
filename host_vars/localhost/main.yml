@@ -1,5 +1,5 @@
 archive_root: /var/lib/import
-export_dir: "{{ archive_root }}/httpd"
+export_dir: /var/lib/export
 
 git_mirror_action: download
 git_mirror_workdir: "{{ archive_root }}/git-repos"
