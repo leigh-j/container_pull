@@ -3,6 +3,7 @@ git_repos:
   operators: "{{ op_gitrepos }}"
   openshift:
     - https://github.com/openshift/openshift-ansible.git
+    - https://github.com/quay/quay-docs.git
     - https://github.com/openshift/source-to-image.git
     - https://github.com/openshift-s2i/s2i-asciibinder.git
     - https://github.com/openshift/jenkins-client-plugin.git
@@ -13,6 +14,7 @@ git_repos:
     - https://github.com/openshift/dancer-ex.git
     - https://github.com/openshift/httpd-ex.git
     - https://github.com/openshift/rails-ex.git
+    - https://github.com/learnk8s/kubernetes-production-best-practices.git
 
   development:
     - https://github.com/jboss-developer/jboss-eap-quickstarts.git
@@ -69,7 +71,6 @@ git_repos:
     - https://github.com/stocky37/dotfiles.git
     - https://github.com/stocky37/yougo-ui.git
     - https://github.com/stocky37/yougo-api.git
-    - https://github.com/stocky37/ansible-role-k8s-applier.git
     - https://github.com/apache/nifi.git
     - https://github.com/intel-cloud/cosbench.git
     - https://github.com/ivanilves/lstags.git

@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tags: ocp
+  tasks:
+    - name: get ocp4 images
+      # the oc binary needs to be >=4.3 
+      shell: '/etc/ansible/playbooks/oc/oc adm -a /etc/ansible/playbooks/ocp-pull.json release mirror  quay.io/openshift-release-dev/ocp-release:4.2.2 --to-dir /var/lib/import/ocp-release/'
+    - name: grab coreos media
+      command: "/bin/wget --recursive --directory-prefix /var/lib/import/wget --cut-dirs 1 -R \'index.html*\' -np {{item}}"
+      loop:
+        - https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.2/latest/
+        - https://mirror.openshift.com/pub/openshift-v3/clients/3.11.154/
+        - https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/oc/4.3/
+    - include_tasks: tasks/pull-images.yml
+      vars:
+        image_repos: "{{ coreos_image_repos | default([]) }}"
+        defined_images: "{{ coreps_images | default([]) }}"
+
+

@@ -14,11 +14,37 @@ op_gitrepos:
   - 'https://github.com/integr8ly/grafana-operator.git'
   - 'https://github.com/bitnami/bitnami-docker-grafana.git'
   - 'https://github.com/strimzi/strimzi-kafka-operator.git'
+  - 'https://github.com/redhat-cop/quay-operator.git'
+  - 'https://github.com/quay/quay.git'
+  - 'https://github.com/CrunchyData/postgres-operator.git'
 
+#From the operator https://github.com/CrunchyData/postgres-operator/blob/REL_4_1/conf/postgres-operator/pgo.yaml#L7
+CCPImageTag: "centos7-11.4-2.4.1"
+PGOImageTag: "centos7-4.1.0"
 
 # this list derived from content of above repos
 op_images:
+# quay
+  - "quay.io/redhat/quay:v3.1.1"
+  - "quay.io/redhat-cop/quay-operator:v0.0.7" 
+# other
   - "quay.io/redhat-cop/namespace-configuration-operator"
+# crunchydata, ha postgresql
+  - "docker.io/crunchydata/postgres-operator:{{ PGOImageTag }}"
+  - "docker.io/crunchydata/pgo-apiserver:{{ PGOImageTag }}"
+  - "docker.io/crunchydata/pgo-lspvc:{{ PGOImageTag }}"
+  - "docker.io/crunchydata/pgo-load:{{ PGOImageTag }}"
+  - "docker.io/crunchydata/pgo-backrest-repo:{{ PGOImageTag }}"
+  - "docker.io/crunchydata/pgo-backrest:{{ PGOImageTag }}"
+  - "docker.io/crunchydata/pgo-event:{{ PGOImageTag }}"
+  - "docker.io/crunchydata/pgo-rmdata:{{ PGOImageTag }}"
+  - "docker.io/crunchydata/pgo-scheduler:{{ PGOImageTag }}"
+  - "docker.io/crunchydata/crunchy-backup:{{ CCPImageTag }}"
+  - "docker.io/crunchydata/crunchy-pgbadger:{{ CCPImageTag }}"
+  - "docker.io/crunchydata/crunchy-pgadmin4:{{ CCPImageTag }}"
+  - "docker.io/crunchydata/crunchy-collect:{{ CCPImageTag }}"
+  - "docker.io/crunchydata/crunchy-backrest-restore:{{ CCPImageTag }}"
+  - "docker.io/crunchydata/crunchy-backup:{{ CCPImageTag }}"
 # prometheus
   - "quay.io/coreos/prometheus-config-reloader:v0.33.0"
   - "quay.io/coreos/prometheus-operator:v0.33.0"
