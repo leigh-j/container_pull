@@ -77,3 +77,4 @@ git_repos:
     - https://github.com/zsh-users/zsh-autosuggestions.git
     - https://github.com/thoughtbot/dotfiles.git
     - https://github.com/thoughtbot/rcm.git
+    - https://github.com/istio/istio.git
