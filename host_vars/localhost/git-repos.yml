@@ -71,6 +71,7 @@ git_repos:
     - https://github.com/stocky37/dotfiles.git
     - https://github.com/stocky37/yougo-ui.git
     - https://github.com/stocky37/yougo-api.git
+    - https://github.com/stocky37/bookinfo.git
     - https://github.com/apache/nifi.git
     - https://github.com/intel-cloud/cosbench.git
     - https://github.com/ivanilves/lstags.git
