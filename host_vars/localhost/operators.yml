@@ -29,6 +29,7 @@ op_images:
   - "quay.io/redhat-cop/quay-operator:v0.0.7" 
 # other
   - "quay.io/redhat-cop/namespace-configuration-operator"
+  - "quay.io/benchmark-operator/benchmark-operator:master"
 # crunchydata, ha postgresql
   - "docker.io/crunchydata/postgres-operator:{{ PGOImageTag }}"
   - "docker.io/crunchydata/pgo-apiserver:{{ PGOImageTag }}"
