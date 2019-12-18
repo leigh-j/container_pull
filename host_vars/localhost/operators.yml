@@ -30,6 +30,10 @@ op_images:
 # other
   - "quay.io/redhat-cop/namespace-configuration-operator"
   - "quay.io/benchmark-operator/benchmark-operator:master"
+  - "quay.io/cloud-bulldozer/uperf:latest"
+  - "quay.io/cloud-bulldozer/sysbench:latest"
+  - "quay.io/cloud-bulldozer/fio:latest"
+  - "quay.io/cloud-bulldozer/fs-drift:latest"
 # crunchydata, ha postgresql
   - "docker.io/crunchydata/postgres-operator:{{ PGOImageTag }}"
   - "docker.io/crunchydata/pgo-apiserver:{{ PGOImageTag }}"
