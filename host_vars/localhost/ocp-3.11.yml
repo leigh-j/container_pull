@@ -69,6 +69,7 @@ ocp_images:
   - "registry.redhat.io/rhel7/rhel-atomic:latest"
   - "registry.redhat.io/rhel7/rhel:latest"
   - "registry.redhat.io/rhel7/etcd:3.2.22"
+  - "registry.redhat.io/redhat-sso-7/sso73-openshift:latest"
   - "registry.redhat.io/ubi8/ubi"
   - "registry.redhat.io/ubi8/ubi-init"
   - "registry.redhat.io/ubi8/ubi-minimal"
@@ -99,9 +100,4 @@ ocp_images:
   - "registry.access.redhat.com/rhceph/rhceph-3-rhel7:3"
   - "registry.access.redhat.com/rhceph/rhceph-3-dashboard-rhel7:3"
   - "quay.io/redhat-cop/namespace-configuration-operator:latest"
-  - "docker.io/mguillem/openshift-jenkins-maven-slave:v3.11"
-  - "docker.io/apache/nifi:latest"
-  - "docker.io/ansible/awx_web:latest"
-  - "docker.io/ansible/awx_task:latest"
-  - "docker.io/bitnami/elasticsearch:7"
-  - "docker.io/bitnami/rabbitmq:3.7"
+

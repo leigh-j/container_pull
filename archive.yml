@@ -16,25 +16,20 @@
         state: directory
       tags: tar
 
-    - name: create mirror dir
-      file:
-        path: "{{ archive_root }}/httpd/"
-        state: directory
-      tags: tar
-    
     - name: archive it
-      shell: "tar -cf images-{{ansible_date_time.date}}.tar ../images/ ../wget ../ocp-release"
+      #shell: "tar -cf images-{{ansible_date_time.date}}.tar ../images/ ../ocp-release ../wget/"
+      shell: "tar -cf images-{{ansible_date_time.date}}.tar ../images/"
       args:
         chdir: "{{ archive_root }}/tar_tmp"
       tags: tar
 
     - name: copy to export
-      shell: "mv {{ archive_root }}/tar_tmp/* {{ archive_root }}/httpd/"
+      shell: "mv {{ archive_root }}/tar_tmp/* {{ export_dir }}"
 
-    - name: perms
-      file:
-        dest: "{{ archive_root }}/httpd/"
-        owner: 'root'
-        mode: 'u=rwX,g=rX,o=rX'
-        recurse: 'yes'
-    
+#    - name: perms
+#      file:
+#        dest: "{{ export_dir}}"
+#        owner: 'root'
+#        mode: 'u=rwX,g=rX,o=rX'
+#        recurse: 'yes'
+#    

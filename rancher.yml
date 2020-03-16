@@ -1,0 +1,110 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tags: rancher
+  vars:
+     base: '/var/lib/import/rancher/'
+     helm_tar: 'helm-v3.0.2-linux-amd64.tar.gz'
+     helm_bin: "{{ base}}/linux-amd64/helm"
+     ranch_ver: v2.3.5
+     rke_ver: v1.0.4
+     rancher_os: v1.5.5
+     rancher_os_kernel: 4.19.91-rancher
+     cli_ver: v2.3.2
+  tasks:
+    - name: get kubectl
+      get_url: "{{ item }}"
+      args:
+        force: yes
+        dest: "{{base}}"
+      loop:
+        - url: 'https://storage.googleapis.com/kubernetes-release/release/v1.17.2/bin/linux/amd64/kubectl'
+          mode: 0755
+        - url: 'https://github.com/rancher/rke/releases/download/{{rke_ver}}/rke_linux-amd64'
+          #checksum: 'sha256:https://github.com/rancher/rke/releases/download/v1.0.1-rc5/sha256sum.txt'
+        - url: "https://get.helm.sh/{{ helm_tar}}"
+         #checksum: 'sha256:https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz.sha256'
+        - url: "https://github.com/rancher/cli/releases/download/{{cli_ver}}/rancher-linux-amd64-{{cli_ver}}.tar.gz"
+        - url: "https://github.com/rancher/rancher/releases/download/{{ranch_ver}}/rancher-images.txt"
+        - url: "https://github.com/rancher/rancher/releases/download/{{ranch_ver}}/rancher-load-images.sh"
+          mode: 0755
+        - url: "https://github.com/rancher/rancher/releases/download/{{ranch_ver}}/rancher-save-images.sh"
+          mode: 0755
+        - url: "https://releases.rancher.com/os/{{rancher_os}}/initrd"
+        - url: "https://releases.rancher.com/os/{{rancher_os}}/vmlinuz"
+        - url: "https://releases.rancher.com/os/{{rancher_os}}/rancheros.ipxe"
+        - url: "https://releases.rancher.com/os/{{rancher_os}}/rootfs.tar.gz"
+        - url: "https://releases.rancher.com/os/releases.yml"
+      tags: binaries
+    - name: unpack helm
+      unarchive: 
+        src: "{{base}}/{{helm_tar}}"
+        dest: "{{base}}"
+    - name: grab helm repos
+      tags: helm
+      shell: "{{helm_bin}} {{item}}"
+      args: 
+        chdir: "{{ base}}"
+      loop:
+        - init
+        - 'repo add jetstack https://charts.jetstack.io'
+        - "repo add rancher-latest https://releases.rancher.com/server-charts/latest"
+        - repo update
+        - "fetch jetstack/cert-manager --version v0.9.1"
+        - "template ./cert-manager-v0.9.1.tgz | grep -oP '(?<=image: \").*(?=\")' >> ./rancher-images.txt"
+        - "fetch rancher-latest/rancher"
+    - name: add os images
+      tags: os
+      shell: "echo {{ item }} >> rancher-images.txt"
+      args:
+        chdir: "{{base}}"
+      # grep -oRP '(?<=image: \${REGISTRY_DOMAIN}\/).*' /var/lib/import/rancher/os-services-{{rancher_os}}/
+      loop:
+        - "cnrancher/os-pingan-amc:v0.0.6-1"
+        - "rancher/container-crontab:v0.4.0"
+        - "rancher/os:{{rancher_os}}"
+        - "rancher/os-alpineconsole:{{rancher_os}}"
+        - "rancher/os-amazonmetadata"
+        - "rancher/os-centosconsole:{{rancher_os}}"
+        - "rancher/os-debianconsole:{{rancher_os}}"
+        - "rancher/os-docker:19.03.5"
+        - "rancher/os-extras:{{rancher_os_kernel}}"
+        - "rancher/os-fedoraconsole:{{rancher_os}}"
+        - "rancher/os-headers:{{rancher_os_kernel}}"
+        - "rancher/os-hypervvmtools:v4.14.138-rancher-1"
+        - "rancher/os-iscsi:v2.0.873-2"
+        - "rancher/os-modemmanager:v1.6.4-1"
+        - "rancher/os-openvmtools:10.3.10-2"
+        - "rancher/os-qemuguestagent:v2.8.1-2"
+        - "rancher/os-ubuntuconsole:{{rancher_os}}"
+        - "rancher/os-vboxtools:v5.2.26-5"
+        - "rancher/os-volumenetshare"
+        - "rancher/os-waagent:v2.2.34-1"
+        - "rancher/os-zfs:v0.7.13-1"
+        - "rancher/server:latest"
+        - "rancher/server:stable"
+        - "wchao241/nvidia-driver:latest"
+
+    - name: grab git repos
+      tags: git
+      git:
+        repo: "{{ item.repo }}"
+        version: "{{ item.version | default('master') }}"
+        dest: "{{ base}}/{{item.name}}"
+      loop:
+        - repo: "https://github.com/rancher/os-services.git"
+          version: "{{ rancher_os }}"
+          name: "os-services-{{rancher_os}}"
+    - name: grab images
+      tags: images
+      shell: "./rancher-save-images.sh"
+      args:
+        chdir: "{{ base}}"
+    - name: tar to export, using shell beacause cant strip parents with arhcive
+      tags: archive
+      args: 
+        chdir: "/var/lib/import"
+      shell: "tar -cvf /var/lib/export/rancher.tar rancher/*"
+
+
+

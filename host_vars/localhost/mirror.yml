@@ -1,0 +1,19 @@
+# for random things we want to mirror, mainly user driven
+#
+mirror_images:
+  - "docker.io/mguillem/openshift-jenkins-maven-slave:v3.11"
+  - "docker.io/apache/nifi:latest"
+  - "docker.io/ansible/awx_web:latest"
+  - "docker.io/ansible/awx_task:latest"
+  - "docker.io/bitnami/elasticsearch:7"
+  - "docker.io/bitnami/rabbitmq:3.8"
+  - "docker.io/library/rabbitmq:management-alpine"
+  - "docker.io/library/nginx:latest"
+  - "docker.io/library/alpine:latest"
+  - "docker.io/adoptopenjdk/openjdk11:x86_64-alpine-jre11u-nightly"
+  - "docker.io/adoptopenjdk/openjdk11:x86_64-alpine-jdk11u-nightly"
+  - "docker.io/adoptopenjdk/openjdk8:x86_64-alpine-jre8u-nightly"
+  - "docker.io/adoptopenjdk/openjdk8:x86_64-alpine-jdk8u-nightly"
+ 
+
+

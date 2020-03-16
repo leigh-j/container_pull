@@ -13,6 +13,7 @@ osp_images:
   - "registry.redhat.io/rhosp13/openstack-cinder-scheduler:{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-cinder-volume:{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-cron:{{ tag_version }}"
+  - "registry.redhat.io/rhosp13/openstack-collectd:{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-glance-api:{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-gnocchi-api:{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-gnocchi-metricd:{{ tag_version }}"
@@ -56,4 +57,7 @@ osp_images:
   - "registry.redhat.io/rhosp13/openstack-swift-container:{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-swift-object:{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-swift-proxy-server:{{ tag_version }}"
+  - "registry.connect.redhat.com/trilio/trilio-horizon-plugin:{{ tag_version }}"
+  - "registry.connect.redhat.com/trilio/trilio-datamover:{{ tag_version  }}"
+  - "registry.connect.redhat.com/trilio/trilio-datamover-api:{{ tag_version }}"
 

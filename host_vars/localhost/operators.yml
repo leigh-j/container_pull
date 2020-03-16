@@ -25,8 +25,6 @@ PGOImageTag: "centos7-4.1.0"
 # this list derived from content of above repos
 op_images:
 # quay
-  - "quay.io/redhat/quay:v3.1.1"
-  - "quay.io/redhat-cop/quay-operator:v0.0.7" 
 # other
   - "quay.io/redhat-cop/namespace-configuration-operator"
   - "quay.io/benchmark-operator/benchmark-operator:master"

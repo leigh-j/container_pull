@@ -28,6 +28,8 @@ git_repos:
     - https://github.com/sclorg/django-ex.git
     - https://github.com/sclorg/nginx-ex.git
     - https://github.com/sclorg/nodejs-ex.git
+    - https://github.com/wildfly/wildfly-s2i.git
+    - https://github.com/wildfly/wildfly-operator.git
 
   redhat_cop:
     - https://github.com/redhat-cop/quay-operator.git
@@ -43,6 +45,7 @@ git_repos:
 
   openstack:
     - https://github.com/openstack/heat.git
+    - https://github.com/nytimes/collectd-rabbitmq.git
 
   cfme:
     - https://github.com/rhtconsulting/cfme-rhconsulting-scripts.git
@@ -63,15 +66,16 @@ git_repos:
 
   ansible:
     - https://github.com/ansible/awx.git
-    - https://github.com/stocky37/ansible-role-git-mirror.git
+    - https://github.com/rh-tstockwell/ansible-role-git-mirror.git
+    - https://github.com/rh-tstockwell/ansible-role-k8s-applier.git
 
   misc:
     - https://github.com/adamgoossens/manageiq-logstash-grok.git
     - https://github.com/leigh-j/container_pull.git
-    - https://github.com/stocky37/dotfiles.git
     - https://github.com/stocky37/yougo-ui.git
     - https://github.com/stocky37/yougo-api.git
-    - https://github.com/stocky37/bookinfo.git
+    - https://github.com/rh-tstockwell/bookinfo.git
+    - https://github.com/rh-tstockwell/blog.git
     - https://github.com/apache/nifi.git
     - https://github.com/intel-cloud/cosbench.git
     - https://github.com/ivanilves/lstags.git
@@ -79,3 +83,4 @@ git_repos:
     - https://github.com/thoughtbot/dotfiles.git
     - https://github.com/thoughtbot/rcm.git
     - https://github.com/istio/istio.git
+    - https://github.com/trilioData/triliovault-cfg-scripts.git
