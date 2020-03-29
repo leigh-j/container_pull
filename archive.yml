@@ -2,17 +2,17 @@
 - name: tar it all
   hosts: localhost
   vars: 
-    archive_root: '/var/lib/import'
+    import_root: '/var/lib/import'
   tasks:
     - name: clear work dir
       file:
-        path: "{{ archive_root }}/tar_tmp"
+        path: "{{ import_root }}/tar_tmp"
         state: absent
       tags: tar
       
     - name: create work dir
       file:
-        path: "{{ archive_root }}/tar_tmp"
+        path: "{{ import_root }}/tar_tmp"
         state: directory
       tags: tar
 
@@ -20,11 +20,11 @@
       #shell: "tar -cf images-{{ansible_date_time.date}}.tar ../images/ ../ocp-release ../wget/"
       shell: "tar -cf images-{{ansible_date_time.date}}.tar ../images/"
       args:
-        chdir: "{{ archive_root }}/tar_tmp"
+        chdir: "{{ import_root }}/tar_tmp"
       tags: tar
 
     - name: copy to export
-      shell: "mv {{ archive_root }}/tar_tmp/* {{ export_dir }}"
+      shell: "mv {{ import_root }}/tar_tmp/* {{ export_dir }}"
 
 #    - name: perms
 #      file:

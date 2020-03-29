@@ -1,0 +1,45 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tags: harbour
+  vars:
+    harbour_ver: 'v1.10.1'
+  pre_tasks:
+    - setup:
+      tags: always
+  tasks:
+    - name: create paths
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: 0755
+      loop:
+        - "{{ import_root }}/harbour"
+      tags: init
+    - name: grab harbour media
+      get_url: 
+        url: "{{item}}"
+        dest: "{{ import_root }}/harbour"
+      loop:
+        - "https://github.com/goharbor/harbor/releases/download/{{ harbour_ver}}/harbor-offline-installer-{{harbour_ver}}.tgz"
+        - "https://github.com/goharbor/harbor/releases/download/{{ harbour_ver}}/harbor-offline-installer-{{harbour_ver}}.tgz.asc"
+        - "https://github.com/goharbor/harbor/releases/download/{{ harbour_ver}}/md5sum"
+      tags: wget
+    - name: clear old export
+      file: 
+        path: "{{ export_dir }}/harbour*"
+        state: absent
+      tags: tar
+    - name: archive it
+      archive: 
+        path: "{{import_root}}/harbour"
+        dest: "{{export_dir}}/harbour-{{ansible_date_time.date}}.tar"
+        format: tar
+        remove: True
+      tags: tar
+
+
+
+
+
+

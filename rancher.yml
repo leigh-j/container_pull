@@ -3,13 +3,14 @@
   gather_facts: no
   tags: rancher
   vars:
-     base: '/var/lib/import/rancher/'
-     helm_tar: 'helm-v3.0.2-linux-amd64.tar.gz'
+     base: "{{import_root}}/rancher/"
+     helm_ver: 'v3.1.2'
      helm_bin: "{{ base}}/linux-amd64/helm"
      ranch_ver: v2.3.5
-     rke_ver: v1.0.4
-     rancher_os: v1.5.5
+     rke_ver: v1.0.5
+     rancher_os: v1.5.4
      rancher_os_kernel: 4.19.91-rancher
+     k30s_ver: 'v0.9.1'
      cli_ver: v2.3.2
   tasks:
     - name: get kubectl
@@ -22,7 +23,7 @@
           mode: 0755
         - url: 'https://github.com/rancher/rke/releases/download/{{rke_ver}}/rke_linux-amd64'
           #checksum: 'sha256:https://github.com/rancher/rke/releases/download/v1.0.1-rc5/sha256sum.txt'
-        - url: "https://get.helm.sh/{{ helm_tar}}"
+        - url: "https://get.helm.sh/helm-{{ helm_ver }}-linux-amd64.tar.gz"
          #checksum: 'sha256:https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz.sha256'
         - url: "https://github.com/rancher/cli/releases/download/{{cli_ver}}/rancher-linux-amd64-{{cli_ver}}.tar.gz"
         - url: "https://github.com/rancher/rancher/releases/download/{{ranch_ver}}/rancher-images.txt"
@@ -35,6 +36,11 @@
         - url: "https://releases.rancher.com/os/{{rancher_os}}/rancheros.ipxe"
         - url: "https://releases.rancher.com/os/{{rancher_os}}/rootfs.tar.gz"
         - url: "https://releases.rancher.com/os/releases.yml"
+          #https://github.com/rancher/k3os/pull/384
+        - url: "https://github.com/rancher/k3os/releases/download/{{k30s_ver}}/k3os-initrd-amd64"
+        - url: "https://github.com/rancher/k3os/releases/download/{{k30s_ver}}/k3os-vmlinuz-amd64"
+        - url: "https://github.com/rancher/k3os/releases/download/{{k30s_ver}}/k3os-rootfs-amd64.tar.gz"
+        - url: "https://github.com/rancher/k3os/releases/download/{{k30s_ver}}/k3os-amd64.iso"
       tags: binaries
     - name: unpack helm
       unarchive: 
@@ -54,7 +60,7 @@
         - "template ./cert-manager-v0.9.1.tgz | grep -oP '(?<=image: \").*(?=\")' >> ./rancher-images.txt"
         - "fetch rancher-latest/rancher"
     - name: add os images
-      tags: os
+      tags: rancheros
       shell: "echo {{ item }} >> rancher-images.txt"
       args:
         chdir: "{{base}}"
@@ -84,7 +90,6 @@
         - "rancher/server:latest"
         - "rancher/server:stable"
         - "wchao241/nvidia-driver:latest"
-
     - name: grab git repos
       tags: git
       git:
@@ -103,8 +108,15 @@
     - name: tar to export, using shell beacause cant strip parents with arhcive
       tags: archive
       args: 
-        chdir: "/var/lib/import"
-      shell: "tar -cvf /var/lib/export/rancher.tar rancher/*"
+        chdir: "{{import_root}}"
+      shell: "tar -cvf {{export_dir}}/rancher.tar rancher/*"
 
 
-
+      #-append 'console=ttyS0 loglevel=4 printk.devkmsg=on \
+      #  ssh_authorized_keys=github:dweomer \
+      #  k3os.mode=install \
+      #  k3os.install.silent \
+      #  k3os.install.device=/dev/vda \
+      #  k3os.install.power_off=true \
+      #  k3os.install.iso_url=https://github.com/rancher/k3os/releases/download/v0.9.1/k3os-amd64.iso \
+      #'

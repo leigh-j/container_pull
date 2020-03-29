@@ -1,0 +1,13 @@
+---
+
+- name: create import dir
+  file: 
+    path: "{{ item }}"
+    state: directory
+    mode: 0777
+  become: True
+  loop:
+    - "{{ import_root }}"
+    - "{{ import_root }}/bin"
+    - "{{ export_dir }}"
+    - "{{ archive_dir }}"

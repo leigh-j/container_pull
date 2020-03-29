@@ -1,22 +1,75 @@
 ---
 - hosts: localhost
-  gather_facts: no
+  gather_facts: True
   tags: ocp
+  vars:
+    # coreos boot media doesnt have point releases, once 4.3 is out its not updated till 4.4
+    coreos_ver: '4.4'
+    ocp_tag: '4.3.8'
+    ocp_ver: '4.3'
+    bin_path: "{{ import_root }}/bin"
+    registry_path: "{{ import_root}}/registry"
+    # get pull secret from https://cloud.redhat.com/openshift/install/metal/user-provisioned
+    quay_creds: "../all.json"
+    mirror_reg: 'registry.home:7000'
+  pre_tasks:
+    - name: facts
+      setup:
+      tags: always
   tasks:
-    - name: get ocp4 images
-      # the oc binary needs to be >=4.3 
-      shell: '/etc/ansible/playbooks/oc/oc adm -a /etc/ansible/playbooks/ocp-pull.json release mirror  quay.io/openshift-release-dev/ocp-release:4.3.3-x86_64 --to-dir /var/lib/import/ocp-release/'
-    - name: grab coreos media
-      command: "/bin/wget --recursive --directory-prefix /var/lib/import/wget --cut-dirs 1 -R \'index.html*\' -np {{item}}"
+    - name: create paths
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: 0755
       loop:
-        - https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.3/latest/
-        - https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/
-        - https://mirror.openshift.com/pub/openshift-v4/clients/ocp-dev-preview/latest-4.3/
+        - "{{ bin_path }}"
+        - "{{ import_root }}/ocp-release"
+        - "{{ import_root }}/wget"
+      tags: init
+    - name: grab coreos media
+      command: "/bin/wget --recursive --directory-prefix {{import_root}}/wget --cut-dirs 1 -R 'index.html*','*nightly*' -np {{ item }}"
+      loop:
+        - "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ coreos_ver }}/latest/"
+        - "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_tag }}/"
+        - "https://mirror.openshift.com/pub/openshift-v4/clients/ocp-dev-preview/latest-{{ coreos_ver }}/"
       tags: wget
-    - include_tasks: tasks/pull-images.yml
-      tags: pull
-      vars:
-        image_repos: "{{ coreos_image_repos | default([]) }}"
-        defined_images: "{{ coreos_images | default([]) }}"
+    - name: extract binary
+      unarchive:
+        src: "{{ item }}"
+        dest: "{{bin_path}}"
+      loop:
+        - "{{import_root}}/wget/mirror.openshift.com/openshift-v4/clients/ocp-dev-preview/latest-{{ocp_ver}}/openshift-client-linux.tar.gz"
+        - "{{import_root}}/wget/mirror.openshift.com/openshift-v4/clients/ocp-dev-preview/latest-{{ocp_ver}}/openshift-install-linux.tar.gz"
+      tags: binary
+    - name: get ocp4 images
+      # the oc binary needs to be >=4.3 for --to-dir
+      shell: "{{bin_path}}/oc adm -a {{quay_creds}} release mirror  quay.io/openshift-release-dev/ocp-release:{{ocp_tag}}-x86_64 --to-dir {{import_root}}/ocp-release/"
+      tags: 
+        - ocp-release
+    - name: ensure mirror reg is running
+      #initialised (certs etc) externally mainly for reference here, hopefully can be deprecated in favour of --to-dir for catalog mirrors
+      shell: "podman run --name mirror-registry -p 7000:5000  -v {{registry_path}}/data:/var/lib/registry:z  -v {{registry_path}}/auth:/auth:z  -e 'REGISTRY_AUTH=htpasswd' -e 'REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm' -e 'REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd' -v {{registry_path}}/certs:/certs:z -e 'REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt' -e 'REGISTRY_HTTP_TLS_KEY=/certs/domain.key' -d docker.io/library/registry:2"
+      failed_when: False
+    - name: create operator catalog
+      shell: "{{bin_path}}/oc adm catalog build --appregistry-org redhat-operators -a {{quay_creds}} --to  {{mirror_reg}}/olm/redhat-operators:v1 --insecure"
+      tags: olm
+    - name: mirror catalog refs
+      shell: "{{bin_path}}/oc adm catalog mirror {{mirror_reg}}/olm/redhat-operators:v1 {{mirror_reg}} -a {{quay_creds}} --insecure"
+      tags: olm
+    - name: clear old export
+      shell: "rm {{export_dir}}/coreos*"
+      ignore_errors: True
+      tags: tar
+    - name: archive it
+      archive:
+        path: 
+          - "{{import_root}}/ocp-release"
+          - "{{import_root}}/wget"
+          - "{{registry_path}}"
+        dest: "{{export_dir}}/ocp-{{ansible_date_time.date}}.tar"
+        format: tar
+        remove: True
+      tags: tar
 
 
