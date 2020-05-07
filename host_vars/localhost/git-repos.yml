@@ -66,16 +66,16 @@ git_repos:
 
   ansible:
     - https://github.com/ansible/awx.git
-    - https://github.com/rh-tstockwell/ansible-role-git-mirror.git
-    - https://github.com/rh-tstockwell/ansible-role-k8s-applier.git
+    - https://github.com/tom-stockwell/ansible-role-git-mirror.git
+    - https://github.com/tom-stockwell/ansible-role-k8s-applier.git
 
   misc:
     - https://github.com/adamgoossens/manageiq-logstash-grok.git
     - https://github.com/leigh-j/container_pull.git
     - https://github.com/stocky37/yougo-ui.git
     - https://github.com/stocky37/yougo-api.git
-    - https://github.com/rh-tstockwell/bookinfo.git
-    - https://github.com/rh-tstockwell/blog.git
+    - https://github.com/tom-stockwell/bookinfo.git
+    - https://github.com/tom-stockwell/blog.git
     - https://github.com/apache/nifi.git
     - https://github.com/intel-cloud/cosbench.git
     - https://github.com/ivanilves/lstags.git
