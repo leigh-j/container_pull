@@ -15,7 +15,6 @@ op_gitrepos:
   - 'https://github.com/bitnami/bitnami-docker-grafana.git'
   - 'https://github.com/strimzi/strimzi-kafka-operator.git'
   - 'https://github.com/redhat-cop/quay-operator.git'
-  - 'https://github.com/quay/quay.git'
   - 'https://github.com/CrunchyData/postgres-operator.git'
 
 #From the operator https://github.com/CrunchyData/postgres-operator/blob/REL_4_1/conf/postgres-operator/pgo.yaml#L7

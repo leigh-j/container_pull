@@ -10,10 +10,30 @@ mirror_images:
   - "docker.io/library/rabbitmq:management-alpine"
   - "docker.io/library/nginx:latest"
   - "docker.io/library/alpine:latest"
+  - "docker.io/library/registry:2"
+  - "docker.io/osixia/openldap:latest"
+  - "docker.io/osixia/openldap:stable"
+  - "docker.io/openjdk:14"
+  - "docker.io/openjdk:15"
   - "docker.io/adoptopenjdk/openjdk11:x86_64-alpine-jre11u-nightly"
   - "docker.io/adoptopenjdk/openjdk11:x86_64-alpine-jdk11u-nightly"
   - "docker.io/adoptopenjdk/openjdk8:x86_64-alpine-jre8u-nightly"
   - "docker.io/adoptopenjdk/openjdk8:x86_64-alpine-jdk8u-nightly"
+  - "registry.redhat.io/rhel7:7.8"
+  - "registry.redhat.io/rhel7:7.7"
+  - "registry.redhat.io/ubi8/ubi"
+  - "registry.redhat.io/ubi8/ubi-init"
+  - "registry.redhat.io/ubi8/ubi-minimal"
+  - "registry.redhat.io/ubi8/s2i-core"
+  - "registry.redhat.io/ubi8/python-27"
+  - "registry.redhat.io/ubi8/python-36"
+  - "registry.redhat.io/ubi8/ruby-25"
+  - "registry.redhat.io/rhscl/nginx-116-rhel7"
+  - "docker.io/jimmidyson/configmap-reload:v0.1"
+  - "docker.io/weaveworks/watch:master-85fdf1d"
+  - "registry.redhat.io/openshift4/ose-operator-registry:v4.4"
+  
+ 
  
 
 

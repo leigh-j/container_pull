@@ -7,7 +7,7 @@ ocp_image_repos:
       - 'roles/openshift_examples/files/examples/x86_64/image-streams/image-streams-rhel7.json'
     paths:
       - 'roles/openshift_examples/files/examples/x86_64/quickstart-templates/'
-      #- 'roles/openshift_examples/files/examples/x86_64/db-templates/'
+      - 'roles/openshift_examples/files/examples/x86_64/db-templates/'
       #- 'roles/openshift_examples/files/examples/x86_64/xpaas-streams/'
       #- 'roles/openshift_examples/files/examples/x86_64/xpaas-templates/'
       #- 'roles/openshift_examples/files/examples/x86_64/image-streams/dotnet_imagestreams.json'
@@ -15,6 +15,7 @@ ocp_image_repos:
 
 # this list derived from https://docs.openshift.com/container-platform/3.11/install/disconnected_install.html#disconnected-syncing-images
 ocp_images:
+ #
   - "registry.redhat.io/openshift3/apb-base:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/apb-tools:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/automation-broker-apb:v{{ocp_version}}"
@@ -23,8 +24,12 @@ ocp_images:
   - "registry.redhat.io/openshift3/csi-livenessprobe:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/csi-provisioner:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/grafana:v{{ocp_version}}"
-  - "registry.redhat.io/openshift3/image-inspector:v{{ocp_version}}"
-  - "registry.redhat.io/openshift3/ose-ansible:v{{ocp_version}}"
+  - "registry.redhat.io/openshift3/local-storage-provisioner:v{{ocp_version}}"
+  - "registry.redhat.io/openshift3/manila-provisioner:v{{ocp_version}}"
+  - "registry.redhat.io/openshift3/mariadb-apb:v{{ocp_version}}"
+  - "registry.redhat.io/openshift3/mediawiki:v{{ocp_version}}"
+  - "registry.redhat.io/openshift3/mediawiki-apb:v{{ocp_version}}"
+  - "registry.redhat.io/openshift3/mysql-apb:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/ose-ansible-service-broker:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/ose-cli:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/ose-cluster-autoscaler:v{{ocp_version}}"
@@ -51,32 +56,28 @@ ocp_images:
   - "registry.redhat.io/openshift3/ose-node:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/ose-node-problem-detector:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/ose-operator-lifecycle-manager:v{{ocp_version}}"
+  - "registry.redhat.io/openshift3/ose-ovn-kubernetes:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/ose-pod:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/ose-prometheus-config-reloader:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/ose-prometheus-operator:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/ose-recycler:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/ose-service-catalog:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/ose-template-service-broker:v{{ocp_version}}"
+  - "registry.redhat.io/openshift3/ose-tests:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/ose-web-console:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/postgresql-apb:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/registry-console:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/snapshot-controller:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/snapshot-provisioner:v{{ocp_version}}"
+  - "registry.redhat.io/rhel7/etcd:3.2.26" 
+  # the following are undocumented extras
   - "registry.redhat.io/openshift3/jenkins-2-rhel7:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/jenkins-slave-base-rhel7:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/jenkins-agent-maven-35-rhel7:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/jenkins-agent-nodejs-8-rhel7:v{{ocp_version}}"
   - "registry.redhat.io/rhel7/rhel-atomic:latest"
   - "registry.redhat.io/rhel7/rhel:latest"
-  - "registry.redhat.io/rhel7/etcd:3.2.22"
   - "registry.redhat.io/redhat-sso-7/sso73-openshift:latest"
-  - "registry.redhat.io/ubi8/ubi"
-  - "registry.redhat.io/ubi8/ubi-init"
-  - "registry.redhat.io/ubi8/ubi-minimal"
-  - "registry.redhat.io/ubi8/s2i-core"
-  - "registry.redhat.io/ubi8/python-27"
-  - "registry.redhat.io/ubi8/python-36"
-  - "registry.redhat.io/ubi8/ruby-25"
   - "registry.redhat.io/openshift3/metrics-cassandra:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/metrics-hawkular-metrics:v{{ocp_version}}"
   - "registry.redhat.io/openshift3/metrics-hawkular-openshift-agent:v{{ocp_version}}"

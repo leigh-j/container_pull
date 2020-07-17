@@ -5,6 +5,6 @@
   tasks:
     - include_tasks: tasks/pull-images.yml
       vars:
-        image_repos: "{{ mirror_repos | default([]) }}"
+        #image_repos: "{{ mirror_repos | default([]) }}"
         defined_images: "{{ mirror_images | default([]) }}"
 

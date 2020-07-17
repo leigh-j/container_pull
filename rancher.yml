@@ -6,7 +6,7 @@
      base: "{{import_root}}/rancher/"
      helm_ver: 'v3.1.2'
      helm_bin: "{{ base}}/linux-amd64/helm"
-     ranch_ver: v2.3.5
+     ranch_ver: v2.4.0
      rke_ver: v1.0.5
      rancher_os: v1.5.4
      rancher_os_kernel: 4.19.91-rancher

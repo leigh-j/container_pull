@@ -1,6 +1,7 @@
 image_repos: []
 # tag_version not required unless you want exactly a specific tag"
 tag_version: "latest"
+trilio_tag: '3.4.52-rhosp13'
 osp_images:
   - "registry.redhat.io/rhosp13/openstack-aodh-api:{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-aodh-evaluator:{{ tag_version }}"
@@ -57,7 +58,10 @@ osp_images:
   - "registry.redhat.io/rhosp13/openstack-swift-container:{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-swift-object:{{ tag_version }}"
   - "registry.redhat.io/rhosp13/openstack-swift-proxy-server:{{ tag_version }}"
-  - "registry.connect.redhat.com/trilio/trilio-horizon-plugin:{{ tag_version }}"
-  - "registry.connect.redhat.com/trilio/trilio-datamover:{{ tag_version  }}"
-  - "registry.connect.redhat.com/trilio/trilio-datamover-api:{{ tag_version }}"
+  - "registry.connect.redhat.com/trilio/trilio-horizon-plugin:{{ trilio_tag }}"
+  - "registry.connect.redhat.com/trilio/trilio-datamover:{{ trilio_tag  }}"
+  - "registry.connect.redhat.com/trilio/trilio-datamover-api:{{ trilio_tag }}"
+  - "registry.connect.redhat.com/trilio/trilio-horizon-plugin:latest"
+  - "registry.connect.redhat.com/trilio/trilio-datamover:latest"
+  - "registry.connect.redhat.com/trilio/trilio-datamover-api:latest"
 

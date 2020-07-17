@@ -4,14 +4,17 @@
   tags: ocp
   vars:
     # coreos boot media doesnt have point releases, once 4.3 is out its not updated till 4.4
-    coreos_ver: '4.4'
-    ocp_tag: '4.3.8'
-    ocp_ver: '4.3'
+    coreos_ver: '4.5'
+    ocp_tag: '4.5.1'
+    ocp_ver: '4.5'
     bin_path: "{{ import_root }}/bin"
     registry_path: "{{ import_root}}/registry"
     # get pull secret from https://cloud.redhat.com/openshift/install/metal/user-provisioned
-    quay_creds: "../all.json"
-    mirror_reg: 'registry.home:7000'
+    quay_creds: "/etc/ansible/playbooks/all.json"
+    mirror_reg: 'localhost:7000'
+    operator_orgs:
+      - 'redhat-operators'
+      - 'community-operators'
   pre_tasks:
     - name: facts
       setup:
@@ -25,22 +28,25 @@
       loop:
         - "{{ bin_path }}"
         - "{{ import_root }}/ocp-release"
+        - "{{ import_root }}/olm"
+        - "{{ import_root }}/registry"
         - "{{ import_root }}/wget"
+        - "{{ registry_path }}"
       tags: init
     - name: grab coreos media
-      command: "/bin/wget --recursive --directory-prefix {{import_root}}/wget --cut-dirs 1 -R 'index.html*','*nightly*' -np {{ item }}"
+      command: "/bin/wget --recursive --directory-prefix {{import_root}}/wget --cut-dirs 1 -R 'index.html*,*nightly*' -np {{ item }}"
       loop:
         - "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ coreos_ver }}/latest/"
+        - "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp_ver }}/latest/"
         - "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_tag }}/"
-        - "https://mirror.openshift.com/pub/openshift-v4/clients/ocp-dev-preview/latest-{{ coreos_ver }}/"
       tags: wget
     - name: extract binary
       unarchive:
         src: "{{ item }}"
         dest: "{{bin_path}}"
       loop:
-        - "{{import_root}}/wget/mirror.openshift.com/openshift-v4/clients/ocp-dev-preview/latest-{{ocp_ver}}/openshift-client-linux.tar.gz"
-        - "{{import_root}}/wget/mirror.openshift.com/openshift-v4/clients/ocp-dev-preview/latest-{{ocp_ver}}/openshift-install-linux.tar.gz"
+        - "{{import_root}}/wget/mirror.openshift.com/openshift-v4/clients/ocp/{{ocp_tag}}/openshift-client-linux.tar.gz"
+        - "{{import_root}}/wget/mirror.openshift.com/openshift-v4/clients/ocp/{{ocp_tag}}/openshift-install-linux.tar.gz"
       tags: binary
     - name: get ocp4 images
       # the oc binary needs to be >=4.3 for --to-dir
@@ -51,11 +57,17 @@
       #initialised (certs etc) externally mainly for reference here, hopefully can be deprecated in favour of --to-dir for catalog mirrors
       shell: "podman run --name mirror-registry -p 7000:5000  -v {{registry_path}}/data:/var/lib/registry:z  -v {{registry_path}}/auth:/auth:z  -e 'REGISTRY_AUTH=htpasswd' -e 'REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm' -e 'REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd' -v {{registry_path}}/certs:/certs:z -e 'REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt' -e 'REGISTRY_HTTP_TLS_KEY=/certs/domain.key' -d docker.io/library/registry:2"
       failed_when: False
+      when: False
+      tags: registry
     - name: create operator catalog
-      shell: "{{bin_path}}/oc adm catalog build --appregistry-org redhat-operators -a {{quay_creds}} --to  {{mirror_reg}}/olm/redhat-operators:v1 --insecure"
+#  /var/lib/import/bin/oc adm catalog build --appregistry-org redhat-operators -a /etc/ansible/playbooks/all.json --to=registry.home:7000/mirror/redhat-operators:4.4
+      shell: 
+        cmd: "{{bin_path}}/oc adm catalog build --appregistry-org redhat-operators -a {{quay_creds}} --to  {{mirror_reg}}/mirror/redhat-operators:{{ocp_ver}}"
+        chdir: "{{import_root}}/olm"
       tags: olm
     - name: mirror catalog refs
-      shell: "{{bin_path}}/oc adm catalog mirror {{mirror_reg}}/olm/redhat-operators:v1 {{mirror_reg}} -a {{quay_creds}} --insecure"
+# /var/lib/import/bin/oc adm catalog mirror registry.home:7000/mirror/redhat-operators:4.4 registry.home:7000 -a /etc/ansible/playbooks/all.json
+      shell: "{{bin_path}}/oc adm catalog mirror {{mirror_reg}}/mirror/redhat-operators:{{ocp_ver}} {{mirror_reg}} -a {{quay_creds}} "
       tags: olm
     - name: clear old export
       shell: "rm {{export_dir}}/coreos*"
@@ -65,11 +77,13 @@
       archive:
         path: 
           - "{{import_root}}/ocp-release"
+          - "{{import_root}}/olm"
+          - "{{import_root}}/registry"
           - "{{import_root}}/wget"
           - "{{registry_path}}"
         dest: "{{export_dir}}/ocp-{{ansible_date_time.date}}.tar"
         format: tar
-        remove: True
+        remove: False
       tags: tar
 
 
