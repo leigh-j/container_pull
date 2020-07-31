@@ -1,0 +1,74 @@
+---
+
+
+- hosts: localhost
+  name: mirror helm binaries repos and dependencies
+  vars: 
+    bin_dir: /var/lib/import/bin/
+    helm_exe: "{{bin_dir}}/linux-amd64/helm"
+    helm_ver: v3.2.4
+    repos:
+      - name: cockroachdb
+        url: https://charts.cockroachdb.com/
+        package: cockroachdb
+      - name: jetstack
+        url: https://charts.jetstack.io
+        package: cert-manager
+    helm_dir: /var/lib/import/helm/
+    export_dir: /var/lib/export/
+    cache_dir: "{{helm_dir}}/cache"
+    pkg_dir: "{{helm_dir}}/pkgs"
+    img_list: "{{helm_dir}}/imglist.txt"
+  tasks:
+    - name: create import dir
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: 0755
+      loop:
+        - "{{ bin_dir }}"
+        - "{{ helm_dir }}"
+        - "{{ cache_dir}}"
+        - "{{ pkg_dir}}"
+    - name: get binary
+      get_url:
+         url: "https://get.helm.sh/helm-{{helm_ver}}-linux-amd64.tar.gz"
+         dest: "{{ helm_dir}}"
+    - name: extract executable
+      unarchive: 
+        src: "{{ helm_dir}}/helm-{{helm_ver}}-linux-amd64.tar.gz"
+        dest: "{{bin_dir}}"
+    - name: get helm repos
+      shell:
+        cmd: "{{helm_exe }} repo add {{ item.name}} {{item.url }} --repository-cache {{cache_dir}}"
+      loop: "{{ repos }}" 
+      tags: repos
+    - name: update cache
+      shell:
+        cmd: "{{helm_exe }} repo update --repository-cache {{cache_dir}}"
+      tags: repos   
+    - name: get helm repos
+      shell:
+        cmd: "{{helm_exe }} fetch {{ item.name}}/{{item.package }} --repository-cache {{cache_dir}}"
+        chdir: "{{pkg_dir}}"
+      loop: "{{ repos }}" 
+      tags: repos
+    - name: update cache
+      shell:
+        cmd: "{{helm_exe }} template {{pkg_dir}}/{{item.package}}* | grep -oP '(?<=image: \").*(?=\")' | sort | uniq"
+      register: image_depends
+      loop: "{{repos}}"
+      tags: repos   
+    - name: get images
+      shell:
+        cmd: "{{bin_dir}}/skopeo copy docker://{{item.1}} docker-archive://{{pkg_dir}}/{{item.1|replace('/','__')|replace(':','--') }}.tar"
+      loop: "{{image_depends.results|subelements('stdout_lines') }}"
+      tags: repos
+    - name: archive it
+      shell: 
+        cmd: "tar -cf helm-{{ansible_date_time.date}}.tar ../import/helm"
+        chdir: "{{ export_dir}}"
+      tags: tar
+      
+        
+
