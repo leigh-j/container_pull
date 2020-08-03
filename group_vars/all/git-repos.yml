@@ -51,8 +51,6 @@ git_repos:
 
   ansible:
     - https://github.com/ansible/awx.git
-    - https://github.com/rh-tstockwell/ansible-role-git-mirror.git
-    - https://github.com/rh-tstockwell/ansible-role-k8s-applier.git
 
   misc:
     - https://github.com/adamgoossens/manageiq-logstash-grok.git

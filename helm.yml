@@ -4,21 +4,28 @@
 - hosts: localhost
   name: mirror helm binaries repos and dependencies
   vars: 
+    helm_dir: /var/lib/import/helm/
+    export_dir: /var/lib/export/
+    cache_dir: "{{helm_dir}}/cache"
+    pkg_dir: "{{helm_dir}}/pkgs"
+    tar_dir: "{{helm_dir}}/docker-archive"
     bin_dir: /var/lib/import/bin/
     helm_exe: "{{bin_dir}}/linux-amd64/helm"
     helm_ver: v3.2.4
     repos:
       - name: cockroachdb
         url: https://charts.cockroachdb.com/
-        package: cockroachdb
+        packages: 
+          - cockroachdb
       - name: jetstack
         url: https://charts.jetstack.io
-        package: cert-manager
-    helm_dir: /var/lib/import/helm/
-    export_dir: /var/lib/export/
-    cache_dir: "{{helm_dir}}/cache"
-    pkg_dir: "{{helm_dir}}/pkgs"
-    img_list: "{{helm_dir}}/imglist.txt"
+        packages: 
+          - cert-manager
+      - name: bitnami
+        url: https://charts.bitnami.com/bitnami
+        packages: 
+          - redis
+          - redis-cluster
   tasks:
     - name: create import dir
       file:
@@ -30,6 +37,7 @@
         - "{{ helm_dir }}"
         - "{{ cache_dir}}"
         - "{{ pkg_dir}}"
+        - "{{ tar_dir}}"
     - name: get binary
       get_url:
          url: "https://get.helm.sh/helm-{{helm_ver}}-linux-amd64.tar.gz"
@@ -47,22 +55,22 @@
       shell:
         cmd: "{{helm_exe }} repo update --repository-cache {{cache_dir}}"
       tags: repos   
-    - name: get helm repos
+    - name: get helm packages
       shell:
-        cmd: "{{helm_exe }} fetch {{ item.name}}/{{item.package }} --repository-cache {{cache_dir}}"
+        cmd: "{{helm_exe }} fetch {{ item.0.name}}/{{item.1 }} --repository-cache {{cache_dir}}"
         chdir: "{{pkg_dir}}"
-      loop: "{{ repos }}" 
+      loop: "{{ repos|subelements('packages') }}" 
       tags: repos
-    - name: update cache
+    - name: find dependant images
       shell:
-        cmd: "{{helm_exe }} template {{pkg_dir}}/{{item.package}}* | grep -oP '(?<=image: \").*(?=\")' | sort | uniq"
+        cmd: "{{helm_exe }} template {{item.src}} | grep -oP '(?<=image: ).*' | sort | uniq"
       register: image_depends
-      loop: "{{repos}}"
+      with_filetree: "{{pkg_dir}}"
       tags: repos   
     - name: get images
       shell:
-        cmd: "{{bin_dir}}/skopeo copy docker://{{item.1}} docker-archive://{{pkg_dir}}/{{item.1|replace('/','__')|replace(':','--') }}.tar"
-      loop: "{{image_depends.results|subelements('stdout_lines') }}"
+        cmd: "{{bin_dir}}/skopeo copy docker://{{item.1|replace('\"','')}} docker-archive://{{tar_dir}}/{{item.1|replace('/','__')|replace(':','--') }}.tar"
+      loop: "{{image_depends.results|subelements('stdout_lines')|unique }}"
       tags: repos
     - name: archive it
       shell: 
