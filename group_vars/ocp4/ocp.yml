@@ -1,0 +1,24 @@
+ocp_version: '4.5'
+ocp_image_repos:
+  - name: 'samples-operator'
+    source: "https://github.com/openshift/cluster-samples-operator.git"
+    branch: "release-{{ ocp_version }}"
+    files: []
+#      - 'roles/openshift_examples/files/examples/x86_64/image-streams/image-streams-rhel7.json'
+    path: 'tmp/build/assets/operator/ocp-x86_64/'
+
+
+# this list derived from https://docs.openshift.com/container-platform/3.11/install/disconnected_install.html#disconnected-syncing-images
+ocp_images:
+ #
+  - "registry.redhat.io/rhel7/rhel-atomic:latest"
+  - "registry.redhat.io/rhel7/rhel:latest"
+  - "registry.redhat.io/rhscl/s2i-base-rhel7:latest"
+  - "registry.redhat.io/rhscl/s2i-core-rhel7:latest"
+  - "registry.redhat.io/openjdk/openjdk-11-rhel7:latest"
+  - "registry.redhat.io/openjdk/openjdk-11-rhel8:latest"
+  - "registry.redhat.io/openjdk/openjdk-8-rhel8:latest"
+  - "registry.access.redhat.com/rhceph/rhceph-3-rhel7:3"
+  - "registry.access.redhat.com/rhceph/rhceph-3-dashboard-rhel7:3"
+  - "quay.io/redhat-cop/namespace-configuration-operator:latest"
+

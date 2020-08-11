@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: ocp
   gather_facts: no
   tags: ocp
   tasks:

@@ -3,7 +3,7 @@
   gather_facts: no
   tags: harbour
   vars:
-    harbour_ver: 'v2.0.0'
+    harbour_ver: 'v2.0.2'
   pre_tasks:
     - setup:
       tags: always

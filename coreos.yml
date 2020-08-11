@@ -4,17 +4,16 @@
   tags: ocp
   vars:
     # coreos boot media doesnt have point releases, once 4.3 is out its not updated till 4.4
-    coreos_ver: '4.5'
-    ocp_tag: '4.5.1'
+    ocp_tag: '4.5.5'
     ocp_ver: '4.5'
     bin_path: "{{ import_root }}/bin"
     registry_path: "{{ import_root}}/registry"
     # get pull secret from https://cloud.redhat.com/openshift/install/metal/user-provisioned
     quay_creds: "/etc/ansible/playbooks/all.json"
-    mirror_reg: 'localhost:7000'
+    mirror_reg: 'registry.home:7000'
     operator_orgs:
       - 'redhat-operators'
-      - 'community-operators'
+      #- 'community-operators'
   pre_tasks:
     - name: facts
       setup:
@@ -36,7 +35,6 @@
     - name: grab coreos media
       command: "/bin/wget --recursive --directory-prefix {{import_root}}/wget --cut-dirs 1 -R 'index.html*,*nightly*' -np {{ item }}"
       loop:
-        - "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ coreos_ver }}/latest/"
         - "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp_ver }}/latest/"
         - "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_tag }}/"
       tags: wget
@@ -55,20 +53,22 @@
         - ocp-release
     - name: ensure mirror reg is running
       #initialised (certs etc) externally mainly for reference here, hopefully can be deprecated in favour of --to-dir for catalog mirrors
-      shell: "podman run --name mirror-registry -p 7000:5000  -v {{registry_path}}/data:/var/lib/registry:z  -v {{registry_path}}/auth:/auth:z  -e 'REGISTRY_AUTH=htpasswd' -e 'REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm' -e 'REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd' -v {{registry_path}}/certs:/certs:z -e 'REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt' -e 'REGISTRY_HTTP_TLS_KEY=/certs/domain.key' -d docker.io/library/registry:2"
+      shell: "docker run --name mirror-registry -p 7000:5000  -v {{registry_path}}/data:/var/lib/registry:z  -v {{registry_path}}/auth:/auth:z  -e 'REGISTRY_AUTH=htpasswd' -e 'REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm' -e 'REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd' -v {{registry_path}}/certs:/certs:z -e 'REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt' -e 'REGISTRY_HTTP_TLS_KEY=/certs/domain.key' -d docker.io/library/registry:2"
       failed_when: False
       when: False
       tags: registry
     - name: create operator catalog
 #  /var/lib/import/bin/oc adm catalog build --appregistry-org redhat-operators -a /etc/ansible/playbooks/all.json --to=registry.home:7000/mirror/redhat-operators:4.4
       shell: 
-        cmd: "{{bin_path}}/oc adm catalog build --appregistry-org redhat-operators -a {{quay_creds}} --to  {{mirror_reg}}/mirror/redhat-operators:{{ocp_ver}}"
+        cmd: "{{bin_path}}/oc adm catalog build --appregistry-org {{item}} -a {{quay_creds}} --to  {{mirror_reg}}/mirror/{{item}}:{{ocp_ver}} --from=registry.redhat.io/openshift4/ose-operator-registry:v{{ocp_ver}} --filter-by-os='linux/amd64'"
         chdir: "{{import_root}}/olm"
       tags: olm
+      loop: "{{ operator_orgs}}"
     - name: mirror catalog refs
 # /var/lib/import/bin/oc adm catalog mirror registry.home:7000/mirror/redhat-operators:4.4 registry.home:7000 -a /etc/ansible/playbooks/all.json
-      shell: "{{bin_path}}/oc adm catalog mirror {{mirror_reg}}/mirror/redhat-operators:{{ocp_ver}} {{mirror_reg}} -a {{quay_creds}} "
+      shell: "{{bin_path}}/oc adm catalog mirror {{mirror_reg}}/mirror/{{item}}:{{ocp_ver}} {{mirror_reg}} -a {{quay_creds}} "
       tags: olm
+      loop: "{{ operator_orgs}}"
     - name: clear old export
       shell: "rm {{export_dir}}/coreos*"
       ignore_errors: True

@@ -26,6 +26,10 @@
         packages: 
           - redis
           - redis-cluster
+      - name: harbor
+        url: https://helm.goharbor.io
+        packages:
+          - harbor
   tasks:
     - name: create import dir
       file:
