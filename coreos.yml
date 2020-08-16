@@ -8,6 +8,7 @@
     ocp_ver: '4.5'
     bin_path: "{{ import_root }}/bin"
     registry_path: "{{ import_root}}/registry"
+    olm_dir: "{{import_root}}/olm"
     # get pull secret from https://cloud.redhat.com/openshift/install/metal/user-provisioned
     quay_creds: "/etc/ansible/playbooks/all.json"
     mirror_reg: 'registry.home:7000'
@@ -27,7 +28,7 @@
       loop:
         - "{{ bin_path }}"
         - "{{ import_root }}/ocp-release"
-        - "{{ import_root }}/olm"
+        - "{{ olm_dir }}"
         - "{{ import_root }}/registry"
         - "{{ import_root }}/wget"
         - "{{ registry_path }}"
@@ -48,7 +49,7 @@
       tags: binary
     - name: get ocp4 images
       # the oc binary needs to be >=4.3 for --to-dir
-      shell: "{{bin_path}}/oc adm -a {{quay_creds}} release mirror  quay.io/openshift-release-dev/ocp-release:{{ocp_tag}}-x86_64 --to-dir {{import_root}}/ocp-release/"
+      shell: "{{bin_path}}/oc adm -a {{quay_creds}} release mirror  quay.io/openshift-release-dev/ocp-release:{{ocp_tag}}-x86_64 --"
       tags: 
         - ocp-release
     - name: ensure mirror reg is running
@@ -60,14 +61,17 @@
     - name: create operator catalog
 #  /var/lib/import/bin/oc adm catalog build --appregistry-org redhat-operators -a /etc/ansible/playbooks/all.json --to=registry.home:7000/mirror/redhat-operators:4.4
       shell: 
-        cmd: "{{bin_path}}/oc adm catalog build --appregistry-org {{item}} -a {{quay_creds}} --to  {{mirror_reg}}/mirror/{{item}}:{{ocp_ver}} --from=registry.redhat.io/openshift4/ose-operator-registry:v{{ocp_ver}} --filter-by-os='linux/amd64'"
+        cmd: "{{bin_path}}/oc adm catalog build --appregistry-org {{item}} -a {{quay_creds}} --to  {{mirror_reg}}/mirror/{{item}}:{{ocp_ver}} --from=registry.redhat.io/openshift4/ose-operator-registry:v{{ocp_ver}} --filter-by-os='linux/amd64' --dir={{olm_dir}}/{{item}} --to-db={{olm_dir}}/{{item}}/image/bundles.db"
         chdir: "{{import_root}}/olm"
       tags: olm
       loop: "{{ operator_orgs}}"
     - name: mirror catalog refs
 # /var/lib/import/bin/oc adm catalog mirror registry.home:7000/mirror/redhat-operators:4.4 registry.home:7000 -a /etc/ansible/playbooks/all.json
-      shell: "{{bin_path}}/oc adm catalog mirror {{mirror_reg}}/mirror/{{item}}:{{ocp_ver}} {{mirror_reg}} -a {{quay_creds}} "
-      tags: olm
+# oc adm catalog mirror registry.home:7000/mirror/redhat-operators:test registry.home:7000 --filter-by-os='linux/amd64' --to-manifests=/var/lib/import/olm/redhat-operators/ --path=/:/var/lib/import/olm/redhat-operators/
+      shell: "{{bin_path}}/oc adm catalog mirror {{mirror_reg}}/mirror/{{item}}:{{ocp_ver}} {{mirror_reg}} -a {{quay_creds}} --filter-by-os='linux/amd64' --to-manifests={{olm_dir}}/{{item}} --path=/:{{olm_dir}}/{{item}}/image"
+      tags: 
+        - olm
+        - olmrefs
       loop: "{{ operator_orgs}}"
     - name: clear old export
       shell: "rm {{export_dir}}/coreos*"
@@ -78,7 +82,6 @@
         path: 
           - "{{import_root}}/ocp-release"
           - "{{import_root}}/olm"
-          - "{{import_root}}/registry"
           - "{{import_root}}/wget"
           - "{{registry_path}}"
         dest: "{{export_dir}}/ocp-{{ansible_date_time.date}}.tar"
