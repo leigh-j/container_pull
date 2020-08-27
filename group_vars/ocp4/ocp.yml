@@ -21,4 +21,5 @@ ocp_images:
   - "registry.access.redhat.com/rhceph/rhceph-3-rhel7:3"
   - "registry.access.redhat.com/rhceph/rhceph-3-dashboard-rhel7:3"
   - "quay.io/redhat-cop/namespace-configuration-operator:latest"
+  - "cockroachdb/cockroach-k8s-request-cert:0.4"
 
