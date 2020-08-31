@@ -8,6 +8,7 @@
     ocp_ver: '4.5'
     bin_path: "{{ import_root }}/bin"
     registry_path: "{{ import_root}}/registry"
+    release_path: "{{import_root}}/ocp-release"
     olm_dir: "{{import_root}}/olm"
     # get pull secret from https://cloud.redhat.com/openshift/install/metal/user-provisioned
     quay_creds: "/etc/ansible/playbooks/all.json"
@@ -27,9 +28,8 @@
         mode: 0755
       loop:
         - "{{ bin_path }}"
-        - "{{ import_root }}/ocp-release"
+        - "{{ release_path }}"
         - "{{ olm_dir }}"
-        - "{{ import_root }}/registry"
         - "{{ import_root }}/wget"
         - "{{ registry_path }}"
       tags: init
@@ -55,20 +55,20 @@
       tags: binary
     - name: get ocp4 images
       # the oc binary needs to be >=4.3 for --to-dir
-      shell: "{{bin_path}}/oc adm -a {{quay_creds}} release mirror  quay.io/openshift-release-dev/ocp-release:{{ocp_tag}}-x86_64 --to {{mirror_reg}}/quay.io/openshift-release-dev --to-release-image  {{mirror_reg}}/quay.io/openshift-release-dev/ocp-release:{{ocp_tag}}-x86_64"
+      shell: "{{bin_path}}/oc adm -a {{quay_creds}} release mirror  quay.io/openshift-release-dev/ocp-release:{{ocp_tag}}-x86_64 --to-dir {{release_path}}"
       tags: 
         - ocp-release
       register: release_mirror
     - name: preserve mirror output for high side
       copy:
-        content: "{{release_mirror}"
+        content: "{{release_mirror}}"
         dest: "{{registry_path}}/mirror.out"
       tags: ocp-release
     - name: ensure mirror reg is running
       #initialised (certs etc) externally mainly for reference here, hopefully can be deprecated in favour of --to-dir for catalog mirrors
-      shell: "docker run --name mirror-registry -p 7000:5000  -v {{registry_path}}/data:/var/lib/registry:z  -v {{registry_path}}/auth:/auth:z  -e 'REGISTRY_AUTH=htpasswd' -e 'REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm' -e 'REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd' -v {{registry_path}}/certs:/certs:z -e 'REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt' -e 'REGISTRY_HTTP_TLS_KEY=/certs/domain.key' -d docker.io/library/registry:2"
+      shell: "docker start mirror-registry"
+#      shell: "docker run --name mirror-registry -p 7000:5000  -v {{registry_path}}/data:/var/lib/registry:z  -v {{registry_path}}/auth:/auth:z  -e 'REGISTRY_AUTH=htpasswd' -e 'REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm' -e 'REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd' -v {{registry_path}}/certs:/certs:z -e 'REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt' -e 'REGISTRY_HTTP_TLS_KEY=/certs/domain.key' -d docker.io/library/registry:2"
       failed_when: False
-      when: False
       tags: registry
     - name: create operator catalog
       shell: 
@@ -83,13 +83,15 @@
         - olmrefs
       loop: "{{ operator_orgs}}"
     - name: clear old export
-      shell: "rm {{export_dir}}/coreos*"
+      shell: "rm {{export_dir}}/ocp*"
       ignore_errors: True
       tags: tar
     - name: archive it
       archive:
         path: 
           - "{{import_root}}/olm"
+          - "{{import_root}}/helm"
+      #    - "{{import_root}}/images"
           - "{{import_root}}/wget"
           - "{{registry_path}}"
         dest: "{{export_dir}}/ocp-{{ansible_date_time.date}}.tar"
