@@ -1,6 +1,6 @@
 ---
 - hosts: ocp
-  gather_facts: no
+  gather_facts: yes
   tags: ocp
   tasks:
     - include_tasks: tasks/pull-images.yml

@@ -2,6 +2,7 @@ import_root: /var/lib/import
 export_dir: /var/lib/export
 archive_dir: "{{export_dir}}/archive"
 
+mirror_registry: 'registry.therealworld:7000'
 git_mirror_action: download
 git_mirror_workdir: "{{ import_root }}/git-repos"
 git_export_archive: "{{ export_dir }}/git-repos.tar.gz"
