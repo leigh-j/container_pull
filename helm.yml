@@ -5,11 +5,11 @@
   name: mirror helm binaries repos and dependencies
   vars: 
     helm_dir: /var/lib/import/helm/
-    export_dir: /var/lib/export/
+    export_dir: /var/lib/import/export/
     cache_dir: "{{helm_dir}}/cache"
     pkg_dir: "{{helm_dir}}/pkgs"
     tar_dir: "{{helm_dir}}/docker-archive"
-    bin_dir: /var/lib/import/bin/
+    bin_dir: /var/lib/import/bin
     helm_exe: "{{bin_dir}}/linux-amd64/helm"
     helm_ver: v3.2.4
     repos:
@@ -17,16 +17,25 @@
         url: https://charts.cockroachdb.com/
         packages: 
           - cockroachdb
-      - name: jetstack
-        url: https://charts.jetstack.io
-        packages: 
-          - cert-manager
       - name: bitnami
         url: https://charts.bitnami.com/bitnami
         packages: 
           - redis
           - redis-cluster
           - harbor
+      - name: ingress-nginx
+        url: https://kubernetes.github.io/ingress-nginx
+        packages:
+          - ingress-nginx
+      - name: elastic-search
+        url: https://helm.elastic.co
+        packages:
+          - apm-server
+          - elasticsearch
+          - filebeat
+          - kibana
+          - logstash
+          - metricbeat
   tasks:
     - name: create import dir
       file:
@@ -45,39 +54,60 @@
          dest: "{{ helm_dir}}"
     - name: extract executable
       unarchive: 
-        src: "{{ helm_dir}}/helm-{{helm_ver}}-linux-amd64.tar.gz"
+        src: "{{helm_dir}}/helm-{{helm_ver}}-linux-amd64.tar.gz"
         dest: "{{bin_dir}}"
     - name: get helm repos
       shell:
-        cmd: "{{helm_exe }} repo add {{ item.name}} {{item.url }} --repository-cache {{cache_dir}}"
+        cmd: "{{helm_exe}} repo add {{ item.name}} {{item.url}} --repository-cache {{cache_dir}}"
       loop: "{{ repos }}" 
       tags: repos
     - name: update cache
       shell:
-        cmd: "{{helm_exe }} repo update --repository-cache {{cache_dir}}"
+        cmd: "{{helm_exe}} repo update --repository-cache {{cache_dir}}"
       tags: repos   
     - name: get helm packages
       shell:
-        cmd: "{{helm_exe }} fetch {{ item.0.name}}/{{item.1 }} --repository-cache {{cache_dir}}"
+        cmd: "{{helm_exe}} fetch {{ item.0.name}}/{{item.1 }} --repository-cache {{cache_dir}}"
         chdir: "{{pkg_dir}}"
-      loop: "{{ repos|subelements('packages') }}" 
+      loop: "{{repos|subelements('packages')}}" 
       tags: repos
     - name: find dependant images
       shell:
         cmd: "{{helm_exe }} template {{item.src}} | grep -oP '(?<=image: ).*' | sort | uniq"
       register: image_depends
       with_filetree: "{{pkg_dir}}"
-      tags: repos   
+      tags: repos
+    - name: find more dependant images
+      shell:
+        cmd: |
+           {{helm_exe}} show values {{item.src}} | yq -r 'flatten | .. | .registry? + "/"? + .repository? + ":"? + .tag?' | grep -v null | sort | uniq | grep -v /: | sed 's/^\///' 
+      register: more_image_depends
+      with_filetree: "{{pkg_dir}}"
+      ignore_errors: yes
+      tags: repos
+    - name: collect images
+      set_fact:
+        images_to_mirror: "{{ (images_to_mirror | default([])) + [(item[1]| replace('\"',''))] }}"
+      loop: "{{image_depends.results|subelements('stdout_lines')|unique }}"
+    - name: collect more images
+      set_fact:
+        images_to_mirror: "{{ (images_to_mirror | default([])) + [(item[1]| replace('\"',''))] }}"
+      loop: "{{more_image_depends.results|subelements('stdout_lines')|unique }}"
+    - name:
+      debug:
+        var: images_to_mirror
+        verbosity: 0
+      tags: repos
+
     - name: get images
       shell:
-        cmd: "{{bin_dir}}/skopeo copy docker://{{item.1|replace('\"','')}} docker-archive://{{tar_dir}}/{{item.1|replace('/','__')|replace(':','--') }}.tar"
-      loop: "{{image_depends.results|subelements('stdout_lines')|unique }}"
+        cmd: "skopeo copy docker://{{item}} docker://{{mirror_registry}}/helm/{{item}}"
+      loop: "{{ images_to_mirror |unique }}"
+      ignore_errors: yes
       tags: repos
     - name: archive it
       shell: 
-        cmd: "tar -cf helm-{{ansible_date_time.date}}.tar ../import/helm"
+        cmd: "tar -cf helm-{{ansible_date_time.date}}.tar ../helm"
         chdir: "{{ export_dir}}"
-      tags: tar
-      
-        
+      tags: tar 
 

@@ -4,7 +4,7 @@
   tags: ocp
   vars:
     # coreos boot media doesnt have point releases, once 4.3 is out its not updated till 4.4
-    ocp_tag: '4.5.12'
+    ocp_tag: '4.5.16'
     coreos_tag: '4.5.6'
     ocp_ver: '4.5'
     bin_path: "{{ import_root }}/bin"
@@ -16,7 +16,7 @@
     mirror_reg: 'registry.therealworld:7000'
     operator_orgs:
       - 'redhat-operators'
-      #- 'community-operators'
+        #- 'certified-operators'
   pre_tasks:
     - name: facts
       setup:
@@ -78,7 +78,7 @@
       tags: olm
       loop: "{{ operator_orgs}}"
     - name: mirror catalog refs
-      shell: "{{bin_path}}/oc adm catalog mirror {{mirror_reg}}/mirror/{{item}}:{{ocp_ver}} {{mirror_reg}} -a {{quay_creds}} --filter-by-os=.* --to-manifests={{olm_dir}}/{{item}} --path=/:{{olm_dir}}/{{item}}/image"
+      shell: "{{bin_path}}/oc adm catalog mirror {{mirror_reg}}/mirror/{{item}}:{{ocp_ver}} {{mirror_reg}}/{{item}} -a {{quay_creds}} --filter-by-os=.* --to-manifests={{olm_dir}}/{{item}} --path=/:{{olm_dir}}/{{item}}/image --max-components=3"
       tags: 
         - olm
         - olmrefs
@@ -92,7 +92,6 @@
         path: 
           - "{{import_root}}/olm"
           - "{{import_root}}/helm"
-      #    - "{{import_root}}/images"
           - "{{import_root}}/wget"
           - "{{registry_path}}"
         dest: "{{export_dir}}/ocp-{{ansible_date_time.date}}.tar"
