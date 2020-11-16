@@ -5,38 +5,52 @@
   name: mirror helm binaries repos and dependencies
   vars: 
     helm_dir: /var/lib/import/helm/
-    export_dir: /var/lib/import/export/
+    export_dir: /var/lib/export/
     cache_dir: "{{helm_dir}}/cache"
     pkg_dir: "{{helm_dir}}/pkgs"
-    tar_dir: "{{helm_dir}}/docker-archive"
     bin_dir: /var/lib/import/bin
     helm_exe: "{{bin_dir}}/linux-amd64/helm"
-    helm_ver: v3.2.4
+    helm_ver: v3.4.0
     repos:
-      - name: cockroachdb
-        url: https://charts.cockroachdb.com/
-        packages: 
-          - cockroachdb
       - name: bitnami
         url: https://charts.bitnami.com/bitnami
         packages: 
-          - redis
-          - redis-cluster
-          - harbor
+          - name: redis
+          - name: redis-cluster
+          - name: harbor
+          - name: kafka
+          - name: zookeeper
+      - name: yugabytedb
+        url: https://charts.yugabyte.com
+        packages:
+          - name: yugabyte
       - name: ingress-nginx
         url: https://kubernetes.github.io/ingress-nginx
         packages:
-          - ingress-nginx
+          - name: ingress-nginx
       - name: elastic-search
         url: https://helm.elastic.co
         packages:
-          - apm-server
-          - elasticsearch
-          - filebeat
-          - kibana
-          - logstash
-          - metricbeat
+          - name: apm-server
+          - name: elasticsearch
+          - name: filebeat
+          - name: kibana
+          - name: logstash
+          - name: metricbeat
+      - name: gitlab
+        url: https://charts.gitlab.io
+        packages:
+          - name: gitlab
+            args: '--set certmanager-issuer.email=me@example.com'
+      - name: minio
+        url: https://helm.min.io/
+        packages:
+          - name: minio
   tasks:
+    - name: clear cache
+      file:
+        path: "{{ helm_dir }}"
+        state: absent
     - name: create import dir
       file:
         path: "{{ item }}"
@@ -47,11 +61,11 @@
         - "{{ helm_dir }}"
         - "{{ cache_dir}}"
         - "{{ pkg_dir}}"
-        - "{{ tar_dir}}"
     - name: get binary
-      get_url:
-         url: "https://get.helm.sh/helm-{{helm_ver}}-linux-amd64.tar.gz"
-         dest: "{{ helm_dir}}"
+      # get_url has selinux issues on latest fedora
+      shell:
+        cmd: "wget https://get.helm.sh/helm-{{helm_ver}}-linux-amd64.tar.gz"
+        chdir: "{{ helm_dir}}"
     - name: extract executable
       unarchive: 
         src: "{{helm_dir}}/helm-{{helm_ver}}-linux-amd64.tar.gz"
@@ -67,15 +81,16 @@
       tags: repos   
     - name: get helm packages
       shell:
-        cmd: "{{helm_exe}} fetch {{ item.0.name}}/{{item.1 }} --repository-cache {{cache_dir}}"
+        cmd: "{{helm_exe}} fetch {{ item.0.name}}/{{item.1.name }} --repository-cache {{cache_dir}}"
         chdir: "{{pkg_dir}}"
       loop: "{{repos|subelements('packages')}}" 
       tags: repos
     - name: find dependant images
       shell:
-        cmd: "{{helm_exe }} template {{item.src}} | grep -oP '(?<=image: ).*' | sort | uniq"
+        cmd: "{{helm_exe }} template {{item.1.name}}* {{ item.1.args | default('') }} | grep -oP '(?<=image: ).*' | sort | uniq"
+        chdir: "{{ pkg_dir }}"
       register: image_depends
-      with_filetree: "{{pkg_dir}}"
+      loop: "{{repos|subelements('packages')}}" 
       tags: repos
     - name: find more dependant images
       shell:
@@ -101,7 +116,7 @@
 
     - name: get images
       shell:
-        cmd: "skopeo copy docker://{{item}} docker://{{mirror_registry}}/helm/{{item}}"
+        cmd: "skopeo copy docker://{{item}} docker://{{mirror_registry}}/{{item}}"
       loop: "{{ images_to_mirror |unique }}"
       ignore_errors: yes
       tags: repos

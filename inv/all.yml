@@ -6,7 +6,6 @@ all:
     ocp4:
       hosts:
         localhost:
-        ocp:
     ocp3:
       hosts:
         localhost:
