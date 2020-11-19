@@ -1,7 +1,8 @@
 ---
 - hosts: ocp4
   gather_facts: True
-  tags: ocp
+  tags: 
+    - ocp
   vars:
     # coreos boot media doesnt have point releases, once 4.3 is out its not updated till 4.4
     ocp_tag: '4.6.3'
@@ -14,9 +15,13 @@
     # get pull secret from https://cloud.redhat.com/openshift/install/metal/user-provisioned
     auth_file: "/var/lib/import/plays/auth.json"
     mirror_reg: 'registry.therealworld:7000'
-    operator_orgs: []
-    #  - 'redhat-operators'
-    #  - 'certified-operators'
+    operator_indexes: 
+      - name: 'redhat-operator'
+        image: "registry.redhat.io/redhat/redhat-operator-index:v{{ocp_ver}}"
+      - name: 'certified-operator'
+        image: "registry.redhat.io/redhat/certified-operator-index:v{{ocp_ver}}"
+      - name: 'community-operator'
+        image: "registry.redhat.io/redhat/community-operator-index:latest"
   pre_tasks:
     - name: facts
       setup:
@@ -66,19 +71,27 @@
     - name: preserve mirror output for high side
       copy:
         content: "{{release_mirror}}"
-        dest: "{{registry_path}}/mirror.out"
+        dest: "{{release_path}}/mirror.out"
       tags: ocp-release
-    - name: ensure mirror reg is running
-      #initialised (certs etc) externally mainly for reference here, hopefully can be deprecated in favour of --to-dir for catalog mirrors
-      shell: "docker start mirror-registry"
-#      shell: "docker run --name mirror-registry -p 7000:5000  -v {{registry_path}}/data:/var/lib/registry:z  -v {{registry_path}}/auth:/auth:z  -e 'REGISTRY_AUTH=htpasswd' -e 'REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm' -e 'REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd' -v {{registry_path}}/certs:/certs:z -e 'REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt' -e 'REGISTRY_HTTP_TLS_KEY=/certs/domain.key' -d docker.io/library/registry:2"
-      failed_when: False
-      tags: registry
+    - name: clear cache
+      file:
+        path: "{{olm_dir}}/{{item.name}}"
+        state: absent
+      loop: "{{ operator_orgs }}"
+      tags: olm
+    - name: clear cache
+      file:
+        path: "{{olm_dir}}/{{item.name}}/image"
+        state: directory
+      loop: "{{ operator_orgs }}"
+      tags: olm
+    - name: mirror indexes
+      shell: "skopeo copy {{item.image}} {{mirror_reg}}/ocp-release/{{item.name}}:{{ocp_tag}}"
+      loop: "{{ operator_orgs }}"
     - name: mirror catalog refs
-      shell: "{{bin_path}}/oc adm catalog mirror {{mirror_reg}}/mirror/{{item}}:{{ocp_ver}} {{mirror_reg}}/{{item}} -a {{auth_file}} --filter-by-os=.* --to-manifests={{olm_dir}}/{{item}} --path=/:{{olm_dir}}/{{item}}/image --max-components=3"
+      shell: "{{bin_path}}/oc adm catalog mirror {{item.image}} {{mirror_reg}}/{{item.name}} -a {{auth_file}} --filter-by-os=linux/amd64 --icsp-scope=registry --max-components=3 --to-manifests={{olm_dir}}/{{item.name}} --path=/:{{olm_dir}}/{{item.name}}/image --insecure"
       tags: 
         - olm
-        - olmrefs
       loop: "{{ operator_orgs}}"
     - name: clear old export
       shell: "rm {{export_dir}}/ocp*"

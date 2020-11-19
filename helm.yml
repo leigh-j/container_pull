@@ -46,6 +46,10 @@
         url: https://helm.min.io/
         packages:
           - name: minio
+      - name: hashicorp
+        url: https://helm.releases.hashicorp.com 
+        packages:
+          - name: vault
   tasks:
     - name: clear cache
       file:
