@@ -22,6 +22,8 @@
         image: "registry.redhat.io/redhat/certified-operator-index:v{{ocp_ver}}"
       - name: 'community-operator'
         image: "registry.redhat.io/redhat/community-operator-index:latest"
+      - name: 'redhat-marketplace'
+        image: "registry.redhat.io/redhat/redhat-marketplace-index:v{{ocp_ver}}"
   pre_tasks:
     - name: facts
       setup:
