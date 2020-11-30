@@ -46,6 +46,10 @@
         url: https://helm.min.io/
         packages:
           - name: minio
+      - name: codecentric
+        url: https://codecentric.github.io/helm-charts
+        packages:
+          - name: keycloak
       - name: hashicorp
         url: https://helm.releases.hashicorp.com 
         packages:

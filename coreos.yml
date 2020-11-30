@@ -5,7 +5,7 @@
     - ocp
   vars:
     # coreos boot media doesnt have point releases, once 4.3 is out its not updated till 4.4
-    ocp_tag: '4.6.3'
+    ocp_tag: '4.6.4'
     coreos_tag: '4.6.1'
     ocp_ver: '4.6'
     bin_path: "{{ import_root }}/bin"
@@ -79,22 +79,24 @@
       file:
         path: "{{olm_dir}}/{{item.name}}"
         state: absent
-      loop: "{{ operator_orgs }}"
+      loop: "{{ operator_indexes }}"
       tags: olm
     - name: clear cache
       file:
         path: "{{olm_dir}}/{{item.name}}/image"
         state: directory
-      loop: "{{ operator_orgs }}"
+      loop: "{{ operator_indexes }}"
       tags: olm
     - name: mirror indexes
-      shell: "skopeo copy {{item.image}} {{mirror_reg}}/ocp-release/{{item.name}}:{{ocp_tag}}"
-      loop: "{{ operator_orgs }}"
+      shell: "skopeo copy docker://{{item.image}} docker://{{mirror_reg}}/ocp-release/{{item.name}}:{{ocp_tag}}"
+      loop: "{{ operator_indexes }}"
+      tags: 
+        - olm
     - name: mirror catalog refs
       shell: "{{bin_path}}/oc adm catalog mirror {{item.image}} {{mirror_reg}}/{{item.name}} -a {{auth_file}} --filter-by-os=linux/amd64 --icsp-scope=registry --max-components=3 --to-manifests={{olm_dir}}/{{item.name}} --path=/:{{olm_dir}}/{{item.name}}/image --insecure"
       tags: 
         - olm
-      loop: "{{ operator_orgs}}"
+      loop: "{{ operator_indexes}}"
     - name: clear old export
       shell: "rm {{export_dir}}/ocp*"
       ignore_errors: True
