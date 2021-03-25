@@ -3,42 +3,23 @@ git_repos:
   operators: "{{ op_gitrepos }}"
   openshift:
     - https://github.com/openshift/openshift-ansible.git
+    - https://github.com/purestorage/pso-csi.git
     - https://github.com/openshift/source-to-image.git
     - https://github.com/openshift/cluster-samples-operator.git
-    - https://github.com/openshift/grafana.git
-    - https://github.com/openshift/prometheus-operator.git
-    - https://github.com/openshift/prometheus-alertmanager.git
-
-  development:
-    - https://github.com/sclorg/cakephp-ex.git
-    - https://github.com/sclorg/django-ex.git
-    - https://github.com/sclorg/nginx-ex.git
-    - https://github.com/sclorg/nodejs-ex.git
     - https://github.com/aquasecurity/trivy-db.git
     - https://github.com/aquasecurity/harbor-scanner-trivy.git
-
-  redhat_cop:
-    - https://github.com/redhat-cop/pipeline-library.git
-    - https://github.com/redhat-cop/spring-rest
-    - https://github.com/redhat-cop/openshift-management
-
+    - https://github.com/ivanilves/lstags.git
   openstack:
     - https://github.com/openstack/heat.git
-    - https://github.com/nytimes/collectd-rabbitmq.git
-
   cfme:
     - https://github.com/rhtconsulting/cfme-rhconsulting-scripts.git
-
   ceph:
     - https://github.com/ceph/ceph-nagios-plugins.git
     - https://github.com/ceph/ceph-ansible.git
-
   ansible:
     - https://github.com/ansible/awx.git
-
   misc:
-    - https://github.com/adamgoossens/manageiq-logstash-grok.git
     - https://github.com/ipxe/ipxe.git
-    - https://github.com/apache/nifi.git
-    - https://github.com/intel-cloud/cosbench.git
     - https://github.com/trilioData/triliovault-cfg-scripts.git
+    - https://github.com/calleerlandsson/syslog-parser.git
+

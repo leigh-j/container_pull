@@ -1,6 +1,6 @@
 # coreos boot media doesnt have point releases, once 4.3 is out its not updated till 4.4
-ocp_tag: '4.6.4'
-coreos_tag: '4.6.4'
+ocp_tag: '4.6.15'
+coreos_tag: '4.6.15'
 ocp_ver: '4.6'
 bin_path: "{{ import_root }}/bin"
 registry_path: "{{ import_root}}/registry"

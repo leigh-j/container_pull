@@ -10,20 +10,28 @@
     pkg_dir: "{{helm_dir}}/pkgs"
     bin_dir: /var/lib/import/bin
     helm_exe: "{{bin_dir}}/linux-amd64/helm"
-    helm_ver: v3.4.0
+    helm_ver: v3.5.3
     repos:
+      - name: pure
+        url: https://purestorage.github.io/pso-csi
+        packages:
+          - name: pure-pso
+            args: '--set clusterID=test --set orchestrator.name=openshift  --set arrays.FlashArrays[0].MgmtEndPoint=test --set arrays.FlashArrays[0].APIToken=apitok'
       - name: bitnami
         url: https://charts.bitnami.com/bitnami
         packages: 
           - name: redis
           - name: redis-cluster
           - name: harbor
+          - name: postgresql
+          - name: postgresql-ha
+          - name: elasticsearch
+          - name: grafana
+          - name: fluentd
+          - name: common
           - name: kafka
           - name: zookeeper
-      - name: yugabytedb
-        url: https://charts.yugabyte.com
-        packages:
-          - name: yugabyte
+          - name: grafana-operator
       - name: ingress-nginx
         url: https://kubernetes.github.io/ingress-nginx
         packages:
@@ -42,6 +50,7 @@
         packages:
           - name: gitlab
             args: '--set certmanager-issuer.email=me@example.com'
+          - name: gitlab-runner
       - name: minio
         url: https://helm.min.io/
         packages:
@@ -54,6 +63,51 @@
         url: https://helm.releases.hashicorp.com 
         packages:
           - name: vault
+      - name: rancher
+        url: https://releases.rancher.com/server-charts/stable
+        packages:
+          - name: rancher
+      - name: banzai
+        url: https://kubernetes-charts.banzaicloud.com
+        packages:
+          - name: logging-operator
+      - name: argo
+        url: https://argoproj.github.io/argo-helm
+        packages:
+          - name: argo-cd
+          - name: argo-ci
+          - name: argocd-notifications
+          - name: argo-events
+      - name: stakter
+        url: https://stakater.github.io/stakater-charts
+        packages:
+          - name: reloader
+            args: '--generate-name'
+      - name: cilium
+        url: https://helm.cilium.io
+        packages: 
+         - name: cilium
+      - name: traefik
+        url: https://helm.traefik.io/traefik
+        packages:
+          - name: traefik
+      - name: grafana
+        url: https://grafana.github.com/helm-charts
+        packages:
+          - name: grafana
+          - name: fluent-bit
+          - name: loki
+          - name: promtail
+          - name: tempo
+          - name: loki-stack
+      - name: jetstack
+        url: https://charts.jetstack.io
+        packages:
+          - name: cert-manager
+      - name: ukto
+        url: https://utkuozdemir.org/helm-charts
+        packages:
+         - name: transmission-openvpn
   tasks:
     - name: clear cache
       file:
@@ -128,9 +182,4 @@
       loop: "{{ images_to_mirror |unique }}"
       ignore_errors: yes
       tags: repos
-    - name: archive it
-      shell: 
-        cmd: "tar -cf helm-{{ansible_date_time.date}}.tar ../helm"
-        chdir: "{{ export_dir}}"
-      tags: tar 
 

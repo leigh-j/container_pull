@@ -5,8 +5,8 @@
     - ocp
   vars:
     # coreos boot media doesnt have point releases, once 4.3 is out its not updated till 4.4
-    ocp_tag: '4.6.4'
-    coreos_tag: '4.6.1'
+    ocp_tag: '4.6.20'
+    coreos_tag: '4.6.8'
     ocp_ver: '4.6'
     bin_path: "{{ import_root }}/bin"
     registry_path: "{{ import_root}}/registry"
@@ -14,16 +14,16 @@
     olm_dir: "{{import_root}}/olm"
     # get pull secret from https://cloud.redhat.com/openshift/install/metal/user-provisioned
     auth_file: "/var/lib/import/plays/auth.json"
-    mirror_reg: 'registry.therealworld:7000'
     operator_indexes: 
+    # see https://access.redhat.com/support/cases/#/case/02729981
       - name: 'redhat-operator'
-        image: "registry.redhat.io/redhat/redhat-operator-index:v{{ocp_ver}}"
-      - name: 'certified-operator'
-        image: "registry.redhat.io/redhat/certified-operator-index:v{{ocp_ver}}"
-      - name: 'community-operator'
-        image: "registry.redhat.io/redhat/community-operator-index:latest"
-      - name: 'redhat-marketplace'
-        image: "registry.redhat.io/redhat/redhat-marketplace-index:v{{ocp_ver}}"
+        image: "registry.redhat.io/redhat/redhat-operator-index@sha256:795401324fa1482361d5af7080378cf6abc5d31a26c4166d8b6af14978af1754"
+          # - name: 'certified-operator'
+          # image: "registry.redhat.io/redhat/certified-operator-index@sha256:3ec2a292197c45f1c3f28e19579ae0df0a7764efc6ca997b40ef6ec2a05f862e"
+#      - name: 'community-operator'
+#        image: "registry.redhat.io/redhat/community-operator-index@sha256:59cc56d927637850dbeea69f55e6ad28d3b634695db23f71089fcd16199f8ffc"
+      #- name: 'redhat-marketplace'
+      #  image: "registry.redhat.io/redhat/redhat-marketplace-index:v{{ocp_ver}}"
   pre_tasks:
     - name: facts
       setup:
@@ -53,7 +53,7 @@
         - "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_tag }}/openshift-client-linux-{{ocp_tag}}.tar.gz"
         - "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_tag }}/openshift-client-windows-{{ocp_tag}}.zip"
         - "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_tag }}/openshift-install-linux-{{ocp_tag}}.tar.gz"
-        - "http://mirror.openshift.com/pub/openshift-v4/clients/opm/{{coreos_tag}}/opm-linux-4.6.1.tar.gz"
+        - "http://mirror.openshift.com/pub/openshift-v4/clients/opm/4.6.1/opm-linux-4.6.1.tar.gz"
       tags: wget,binary
     - name: extract binary
       unarchive:
@@ -62,14 +62,18 @@
       loop:
         - "{{import_root}}/wget/mirror.openshift.com/openshift-v4/clients/ocp/{{ocp_tag}}/openshift-client-linux-{{ocp_tag}}.tar.gz"
         - "{{import_root}}/wget/mirror.openshift.com/openshift-v4/clients/ocp/{{ocp_tag}}/openshift-install-linux-{{ocp_tag}}.tar.gz"
-        - "{{import_root}}/wget/mirror.openshift.com/openshift-v4/clients/opm/{{coreos_tag}}/opm-linux-4.6.1.tar.gz"
+        - "{{import_root}}/wget/mirror.openshift.com/openshift-v4/clients/opm/4.6.1/opm-linux-4.6.1.tar.gz"
       tags: binary
     - name: get ocp4 images
-      # the oc binary needs to be >=4.3 for --to-dir
       shell: "{{bin_path}}/oc adm -a {{auth_file}} release mirror  quay.io/openshift-release-dev/ocp-release:{{ocp_tag}}-x86_64 --to-dir {{release_path}}"
       tags: 
         - ocp-release
       register: release_mirror
+    # see https://github.com/ansible/ansible/issues/56243#issuecomment-562657109
+    - name: deal with copy bug
+      file:
+        path: "{{release_path}}/mirror.out"
+        state: touch
     - name: preserve mirror output for high side
       copy:
         content: "{{release_mirror}}"
@@ -79,6 +83,7 @@
       file:
         path: "{{olm_dir}}/{{item.name}}"
         state: absent
+        force: yes
       loop: "{{ operator_indexes }}"
       tags: olm
     - name: clear cache
@@ -88,27 +93,17 @@
       loop: "{{ operator_indexes }}"
       tags: olm
     - name: mirror indexes
-      shell: "skopeo copy docker://{{item.image}} docker://{{mirror_reg}}/ocp-release/{{item.name}}:{{ocp_tag}}"
+      shell: "skopeo copy docker://{{item.image}} docker://{{mirror_registry}}/ocp-release/{{item.name}}:{{ocp_tag}}"
       loop: "{{ operator_indexes }}"
       tags: 
         - olm
     - name: mirror catalog refs
-      shell: "{{bin_path}}/oc adm catalog mirror {{item.image}} {{mirror_reg}}/{{item.name}} -a {{auth_file}} --filter-by-os=linux/amd64 --icsp-scope=registry --max-components=3 --to-manifests={{olm_dir}}/{{item.name}} --path=/:{{olm_dir}}/{{item.name}}/image --insecure"
+      shell: "{{bin_path}}/oc adm catalog mirror {{item.image}} {{mirror_registry}}/{{item.name}} -a {{auth_file}} --filter-by-os=.* --icsp-scope=registry --to-manifests={{olm_dir}}/{{item.name}}"
       tags: 
         - olm
       loop: "{{ operator_indexes}}"
-    - name: clear old export
-      shell: "rm {{export_dir}}/ocp*"
-      ignore_errors: True
-      tags: tar
-    - name: archive it
-      archive:
-        path: 
-          - "{{import_root}}/olm"
-          - "{{import_root}}/helm"
-          - "{{import_root}}/wget"
-          - "{{registry_path}}"
-        dest: "{{export_dir}}/ocp-{{ansible_date_time.date}}.tar"
-        format: tar
-        remove: False
-      tags: tar
+    - name: mirror images
+      shell: |
+        awk -F '[/=@:]' '{ if (NF==10) system("skopeo copy --all docker://"$1"/"$2"/"$3"@sha256:"$5" docker://registry.mirror:5000/"$1"/"$2":"$10" --authfile /var/lib/import/plays/auth.json")}' /var/lib/import/olm/{{item.name}}/mapping.txt 
+      tags: olm
+      loop: "{{ operator_indexes }}"
