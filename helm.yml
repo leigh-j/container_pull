@@ -12,6 +12,10 @@
     helm_exe: "{{bin_dir}}/linux-amd64/helm"
     helm_ver: v3.5.3
     repos:
+      - name: prometheus-community
+        url: https://prometheus-community.github.io/helm-charts
+        packages: 
+          - name: prometheus
       - name: pure
         url: https://purestorage.github.io/pso-csi
         packages:
@@ -26,6 +30,7 @@
           - name: postgresql
           - name: postgresql-ha
           - name: elasticsearch
+          - name: metallb
           - name: grafana
           - name: fluentd
           - name: common
@@ -97,6 +102,7 @@
           - name: grafana
           - name: fluent-bit
           - name: loki
+          - name: loki-distributed
           - name: promtail
           - name: tempo
           - name: loki-stack
@@ -123,6 +129,12 @@
         - "{{ helm_dir }}"
         - "{{ cache_dir}}"
         - "{{ pkg_dir}}"
+    - name: create import dir
+      file:
+        path: "{{pkg_dir}}/{{ item.name }}"
+        state: directory
+        mode: 0755
+      loop: "{{ repos}}"
     - name: get binary
       # get_url has selinux issues on latest fedora
       shell:
@@ -144,12 +156,12 @@
     - name: get helm packages
       shell:
         cmd: "{{helm_exe}} fetch {{ item.0.name}}/{{item.1.name }} --repository-cache {{cache_dir}}"
-        chdir: "{{pkg_dir}}"
+        chdir: "{{pkg_dir}}/{{item.0.name}}"
       loop: "{{repos|subelements('packages')}}" 
       tags: repos
     - name: find dependant images
       shell:
-        cmd: "{{helm_exe }} template {{item.1.name}}* {{ item.1.args | default('') }} | grep -oP '(?<=image: ).*' | sort | uniq"
+        cmd: "{{helm_exe }} template {{item.0.name}}/{{item.1.name}}* {{ item.1.args | default('') }} | grep -oP '(?<=image: ).*' | sort | uniq"
         chdir: "{{ pkg_dir }}"
       register: image_depends
       loop: "{{repos|subelements('packages')}}" 
@@ -160,16 +172,17 @@
            {{helm_exe}} show values {{item.src}} | yq -r 'flatten | .. | .registry? + "/"? + .repository? + ":"? + .tag?' | grep -v null | sort | uniq | grep -v /: | sed 's/^\///' 
       register: more_image_depends
       with_filetree: "{{pkg_dir}}"
+      when: item.state == 'file'
       ignore_errors: yes
       tags: repos
     - name: collect images
       set_fact:
         images_to_mirror: "{{ (images_to_mirror | default([])) + [(item[1]| replace('\"',''))] }}"
       loop: "{{image_depends.results|subelements('stdout_lines')|unique }}"
-    - name: collect more images
-      set_fact:
-        images_to_mirror: "{{ (images_to_mirror | default([])) + [(item[1]| replace('\"',''))] }}"
-      loop: "{{more_image_depends.results|subelements('stdout_lines')|unique }}"
+        #    - name: collect more images
+        #      set_fact:
+        #        images_to_mirror: "{{ (images_to_mirror | default([])) + [(item[1]| replace('\"',''))] }}"
+        #      loop: "{{ subelements('stdout_lines',more_image_depends.results,skip_missing=true)|unique }}"
     - name:
       debug:
         var: images_to_mirror
